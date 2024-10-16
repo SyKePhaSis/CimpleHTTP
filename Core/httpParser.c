@@ -7,6 +7,7 @@
 
 sreq splitReq(char* req)
 {
+    logInfo("Splitting the Request");
     sreq resp;
     resp.finished = 0;
     char **out = malloc(sizeof(char*));
@@ -19,18 +20,19 @@ sreq splitReq(char* req)
     char *line;
     int c = 0;
     line = strtok(req, "\r\n");
+    logInfo("Check");
     while(line != NULL)
     {
         c += 1;
         out = realloc(out, c * sizeof(char*));
-        if(out == NULL)
+        if(!out)
         {
             logError("Couldn't append allocated memory to save request.");
             return resp;
         }
 
         out[c-1] = malloc(sizeof(char) * (strlen(line) + 1));
-        if(out[c-1] == NULL)
+        if(!out[c-1])
         {
             logError("Couldn't Allocate Memory to save Line");
             return resp;
@@ -81,7 +83,18 @@ request extractRequestInfo(char* req)
         return ret;
     }
     getInfo(&ret, split_req.s_arr[0]);
+    freeSREQ(split_req);
     return ret;
+}
+
+void freeSREQ(sreq split_req)
+{
+    for(size_t i = 0; i < split_req.len; i++)
+    {
+        free(split_req.s_arr[i]);
+    }
+    free(split_req.s_arr);
+    logInfo("Freed SREQ Object");
 }
 
 // Helpers
@@ -93,3 +106,4 @@ void printSreq(sreq req)
     }
     return;
 }
+

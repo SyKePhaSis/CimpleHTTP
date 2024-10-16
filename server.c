@@ -103,12 +103,12 @@ void slisten(SOCKET* lsock){
 void handle(char* req, SOCKET* csock){
     request reqi = extractRequestInfo(req);
     logInfo("%s %s %s", reqi.method, reqi.path);
-    serve(reqi.path, csock);
+    serve(reqi, csock);
     return;
 }
 
-void serve(char* path, SOCKET* csock){
-    if(strcmp(path, "/") == 0)
+void serve(request req, SOCKET* csock){
+    if(strcmp(req.path, "/") == 0)
     {
         getIndex(csock);
     } else {

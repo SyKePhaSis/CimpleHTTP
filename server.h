@@ -9,7 +9,7 @@
 void initialize(SOCKET* s);
 void slisten(SOCKET* lsock);
 void handle(char* req, SOCKET* csock);
-void serve(char* path, SOCKET* csock);
+void serve(request req, SOCKET* csock);
 void gshutdown(SOCKET lsock);
 
 #endif

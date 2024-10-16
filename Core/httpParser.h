@@ -27,5 +27,6 @@ sreq splitReq(char* req);
 request extractRequestInfo(char* req);
 void getInfo(request* req, char* line);
 void printSreq(sreq req);
+void freeSREQ(sreq split_req);
 
 #endif
