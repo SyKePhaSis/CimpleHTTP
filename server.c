@@ -1,19 +1,21 @@
-#include<winsock2.h>
+#include<WinSock2.h>
 #include<stdio.h>
 #include<WS2tcpip.h>
+#include<string.h>
+#include<stdlib.h>
 
-#include "Utils/httpParser.h"
+#include "Core/httpParser.h"
+#include "Core/routes.h"
 #include "Utils/logger.h"
+#include "Utils/fileHandling.h"
+#include "Utils/httpCreator.h"
 #include "server.h"
-
-#pragma comment(lib,"Ws2_32.lib")
 
 int main()
 {   
     SOCKET lsock = INVALID_SOCKET;
-    SOCKET csock = INVALID_SOCKET;
     initialize(&lsock);
-    slisten(&lsock, &csock);
+    slisten(&lsock);
     gshutdown(lsock);
 }
 
@@ -30,7 +32,7 @@ void initialize(SOCKET* lsock)
     }
 
     logInfo("Initialized Winsock");
-    if((*lsock = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+    if((*lsock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
     {
         logError("Couldn't create a socket: %d", WSAGetLastError());
         gshutdown(*lsock);
@@ -55,11 +57,11 @@ void initialize(SOCKET* lsock)
 
 void gshutdown(SOCKET lsock){
     closesocket(lsock);
-    WSACleanup();
-    exit(EXIT_SUCCESS);
-};
+    WSACleanup();   
+}
 
-void slisten(SOCKET* lsock, SOCKET* csock){
+void slisten(SOCKET* lsock){
+
     if ( listen( *lsock, SOMAXCONN ) == SOCKET_ERROR ) {
         logError( "Listen failed with error: %ld\n", WSAGetLastError() );
         gshutdown(*lsock);
@@ -68,18 +70,49 @@ void slisten(SOCKET* lsock, SOCKET* csock){
     char buffer[BUFFER_SIZE];
     while(1)
     {
-        *csock = accept(*lsock, NULL, NULL);
+        SOCKET csock = INVALID_SOCKET;
+        logInfo("Waiting for connection: http://localhost:%d", DEFAULT_PORT);
+        csock = accept(*lsock, NULL, NULL);
 
-        if (*csock == INVALID_SOCKET) {
+        if (csock == INVALID_SOCKET) {
             logError("Accept failed: %d\n", WSAGetLastError());
             gshutdown(*lsock);
         } 
-
         logSuccess("Made the Connection");
-        recv(*csock, buffer, BUFFER_SIZE, 0);
-        printf("%s", buffer);
+        int bytesReceived = recv(csock, buffer, BUFFER_SIZE - 1, 0);
+        logInfo("Received %d bytes", bytesReceived);
+        if (bytesReceived > 0) {
+            buffer[bytesReceived] = '\0';
+        }
+        handle(buffer, &csock);
+        if(shutdown(csock, SD_BOTH) == SOCKET_ERROR)
+        {
+            logError("Couldn't lock READ & WRITE for the socket: %d", WSAGetLastError());
+        }
+        logInfo("Shutdown Socket");
+        logInfo("Socket: %llu", csock);
+        if (csock != INVALID_SOCKET) {
+            closesocket(csock);
+            csock = INVALID_SOCKET;  // Set to invalid after closing
+        } else {
+            logInfo("Closed Socket");
+        }
     }
-};
+}
 
-void handle(){};
-void serve(){};
+void handle(char* req, SOCKET* csock){
+    request reqi = extractRequestInfo(req);
+    logInfo("%s %s %s", reqi.method, reqi.path);
+    serve(reqi.path, csock);
+    return;
+}
+
+void serve(char* path, SOCKET* csock){
+    if(strcmp(path, "/") == 0)
+    {
+        getIndex(csock);
+    } else {
+        get404(csock);
+    }
+    return;
+}

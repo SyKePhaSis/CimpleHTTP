@@ -1,3 +1,4 @@
+#pragma once
 #ifndef httpParser
 #define httpParser
 
@@ -10,19 +11,21 @@ typedef struct request {
     char* path;
     char* params;
     int valid;
+    short int failed;
 } request;
 
 typedef struct sreq {
     char** s_arr;
     int len;
+    int finished;
 } sreq;
 
-request getMethod(char* request);
-char* getPath(char* request);
-char* getQueryParams(char* request);
-sreq splitReq(char* request);
-int verifyRequest(char* request);
-request extractRequestInfo(char* request);
+// char* getPath(char* req);
+// char* getQueryParams(char* req);
+// int verifyRequest(char* req);
+sreq splitReq(char* req);
+request extractRequestInfo(char* req);
+void getInfo(request* req, char* line);
 void printSreq(sreq req);
 
 #endif

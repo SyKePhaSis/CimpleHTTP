@@ -1,13 +1,14 @@
+#pragma once
 #ifndef _LOGGER
 #define _LOGGER
 
 #include<stdarg.h>
 
-void logInfo(char* line,...);
-void logError(char* line,...);
-void logWarning(char* line,...);
-void logSuccess(char* line, ...);
-void __log(char* msg, char* line, va_list vlist);
+void logInfo(const char* line,...);
+void logError(const char* line,...);
+void logWarning(const char* line,...);
+void logSuccess(const char* line, ...);
+void __log(const char* msg, const char* line, va_list vlist);
 
 // COLOURS
 void red();

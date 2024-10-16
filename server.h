@@ -1,13 +1,15 @@
 #ifndef _SERVER
 #define _SERVER
 
-#define DEFAULT_PORT 8080
+#define DEFAULT_PORT 8081
 #define BUFFER_SIZE 4096
 
+#pragma comment(lib,"Ws2_32.lib")
+
 void initialize(SOCKET* s);
-void slisten(SOCKET* lsock, SOCKET* csock);
-void handle();
-void serve();
+void slisten(SOCKET* lsock);
+void handle(char* req, SOCKET* csock);
+void serve(char* path, SOCKET* csock);
 void gshutdown(SOCKET lsock);
 
 #endif

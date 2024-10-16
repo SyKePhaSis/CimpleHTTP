@@ -3,9 +3,9 @@
 #include"logger.h"
 
 
-void logInfo(char* line, ...)
+void logInfo(const char* line, ...)
 {
-    char* msg = "[INFO] ";
+    const char* msg = "[INFO] ";
     va_list argp;
     va_start(argp,line);
     __log(msg, line, argp);
@@ -13,9 +13,9 @@ void logInfo(char* line, ...)
     return;
 }
 
-void logError(char* line, ...)
+void logError(const char* line, ...)
 {
-    char* msg = "[ERROR] ";
+    const char* msg = "[ERROR] ";
     va_list argp;
     va_start(argp,line);
     red();
@@ -25,9 +25,9 @@ void logError(char* line, ...)
     return;
 }
 
-void logWarning(char* line, ...)
+void logWarning(const char* line, ...)
 {
-    char* msg = "[WARNING] ";
+    const char* msg = "[WARNING] ";
     va_list argp;
     va_start(argp,line);
     yellow();
@@ -37,9 +37,9 @@ void logWarning(char* line, ...)
     return;
 }
 
-void logSuccess(char* line, ...)
+void logSuccess(const char* line, ...)
 {
-    char* msg = "[SUCCESS] ";
+    const char* msg = "[SUCCESS] ";
     va_list argp;
     va_start(argp,line);
     green();
@@ -49,10 +49,10 @@ void logSuccess(char* line, ...)
     return;
 }
 
-void __log(char* msg, char* line, va_list vlist)
+void __log(const char* msg, const char* line, va_list vlist)
 {
-    printf(msg);
-    vfprintf(stderr, line, vlist);
+    printf("%s",msg);
+    vfprintf(stdout, line, vlist);
     printf("\n");
 }
 
