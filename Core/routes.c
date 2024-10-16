@@ -3,10 +3,11 @@
 #include"../Utils/fileHandling.h"
 #include"../Utils/logger.h"
 #include"../Core/dataHandling.h"
+#include "../Core/httpParser.h"
 
 #include<WinSock2.h>
 
-void getIndex(SOCKET *csock){
+void getIndex(SOCKET *csock, request req){
     FileResp fr = getFile("/index.html");
     if(fr.data != NULL)
     {
@@ -18,12 +19,14 @@ void getIndex(SOCKET *csock){
         addBody(&res, &fr);
         char* buf = flushHttpRes(&res);
         sendData(csock, buf);
+        logConnection("%s %s 200 OK", req.version, req.path);
     } else {
         logError("FileResp returned with NULL data");
+        get404(csock, req);
     }
 }
 
-void get404(SOCKET *csock){
+void get404(SOCKET *csock, request req){
     FileResp fr = getFile("/404.html");
     if(fr.data != NULL)
     {
@@ -35,6 +38,7 @@ void get404(SOCKET *csock){
         addBody(&res, &fr);
         char* buf = flushHttpRes(&res);
         sendData(csock, buf);
+        logConnection("%s %s 404 Not Found", req.version, req.path);
     } else {
         logError("FileResp returned with NULL data");
     }

@@ -13,6 +13,7 @@
 
 int main()
 {   
+    setLogLevel(Connection);
     SOCKET lsock = INVALID_SOCKET;
     initialize(&lsock);
     slisten(&lsock);
@@ -67,18 +68,19 @@ void slisten(SOCKET* lsock){
         gshutdown(*lsock);
     }
 
+    logSuccess("Waiting for connection: http://localhost:%d", DEFAULT_PORT);
+
     char buffer[BUFFER_SIZE];
     while(1)
     {
         SOCKET csock = INVALID_SOCKET;
-        logInfo("Waiting for connection: http://localhost:%d", DEFAULT_PORT);
         csock = accept(*lsock, NULL, NULL);
 
         if (csock == INVALID_SOCKET) {
             logError("Accept failed: %d\n", WSAGetLastError());
             gshutdown(*lsock);
         } 
-        logSuccess("Made the Connection");
+        logInfo("Made the Connection");
         int bytesReceived = recv(csock, buffer, BUFFER_SIZE - 1, 0);
         logInfo("Received %d bytes", bytesReceived);
         if (bytesReceived > 0) {
@@ -102,7 +104,6 @@ void slisten(SOCKET* lsock){
 
 void handle(char* req, SOCKET* csock){
     request reqi = extractRequestInfo(req);
-    logInfo("%s %s %s", reqi.method, reqi.path);
     serve(reqi, csock);
     return;
 }
@@ -110,9 +111,9 @@ void handle(char* req, SOCKET* csock){
 void serve(request req, SOCKET* csock){
     if(strcmp(req.path, "/") == 0)
     {
-        getIndex(csock);
+        getIndex(csock, req);
     } else {
-        get404(csock);
+        get404(csock, req);
     }
     return;
 }

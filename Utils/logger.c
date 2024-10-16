@@ -2,51 +2,77 @@
 #include <stdarg.h>
 #include"logger.h"
 
+enum LOGGING_LEVEL loglev = All;
 
 void logInfo(const char* line, ...)
 {
-    const char* msg = "[INFO] ";
-    va_list argp;
-    va_start(argp,line);
-    __log(msg, line, argp);
-    va_end(argp);
+    if(Info <= loglev)
+    {
+        const char* msg = "[INFO] ";
+        va_list argp;
+        va_start(argp,line);
+        __log(msg, line, argp);
+        va_end(argp);
+    
+    }
     return;
 }
 
 void logError(const char* line, ...)
-{
-    const char* msg = "[ERROR] ";
-    va_list argp;
-    va_start(argp,line);
-    red();
-    __log(msg, line, argp);
-    reset();
-    va_end(argp);
+{   
+    if(Error <= loglev)
+    {
+        const char* msg = "[ERROR] ";
+        va_list argp;
+        va_start(argp,line);
+        red();
+        __log(msg, line, argp);
+        reset();
+        va_end(argp);
+    }
     return;
 }
 
 void logWarning(const char* line, ...)
 {
-    const char* msg = "[WARNING] ";
-    va_list argp;
-    va_start(argp,line);
-    yellow();
-    __log(msg, line, argp);
-    reset();
-    va_end(argp);
+    if(Warning <= loglev)
+    {
+        const char* msg = "[WARNING] ";
+        va_list argp;
+        va_start(argp,line);
+        yellow();
+        __log(msg, line, argp);
+        reset();
+        va_end(argp);
+    }
     return;
 }
 
 void logSuccess(const char* line, ...)
 {
-    const char* msg = "[SUCCESS] ";
-    va_list argp;
-    va_start(argp,line);
-    green();
-    __log(msg, line, argp);
-    reset();
-    va_end(argp);
+    if(Success <= loglev)
+    {
+        const char* msg = "[SUCCESS] ";
+        va_list argp;
+        va_start(argp,line);
+        green();
+        __log(msg, line, argp);
+        reset();
+        va_end(argp);
+    }
     return;
+}
+
+void logConnection(const char* line, ...)
+{
+    if(Connection <= loglev)
+    {
+        const char* msg = "[CONNECTION] ";
+        va_list argp;
+        va_start(argp,line);
+        __log(msg, line, argp);
+        va_end(argp);
+    }
 }
 
 void __log(const char* msg, const char* line, va_list vlist)
@@ -54,6 +80,11 @@ void __log(const char* msg, const char* line, va_list vlist)
     printf("%s",msg);
     vfprintf(stdout, line, vlist);
     printf("\n");
+}
+
+void setLogLevel(enum LOGGING_LEVEL level)
+{
+    loglev = level;
 }
 
 // COLOUR FUNCTIONS

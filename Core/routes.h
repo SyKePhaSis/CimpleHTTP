@@ -3,6 +3,7 @@
 #define _ROUTES
 
 #include<WinSock2.h>
+#include "../Core/httpParser.h"
 
 enum METHODS {
     GET=0,
@@ -19,8 +20,8 @@ typedef struct Route {
 
 // Define Route Hash Tables
 
-void getIndex(SOCKET *csock);
-void get404(SOCKET *csock);
+void getIndex(SOCKET *csock, request req);
+void get404(SOCKET *csock, request req);
 void defineRoute(enum METHODS method, char* path, char* html, void (*get)(SOCKET *cscok));
 
 #endif

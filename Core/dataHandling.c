@@ -16,7 +16,7 @@ int sendData(SOCKET *csock, char* buf)
         return 0;
     } else {
         logInfo("Sent %d bytes", bytes_sent);
-        logSuccess("Successfully sent response");
+        logInfo("Successfully sent response");
         return 1;
     }
     free(buf);
