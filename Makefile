@@ -1,17 +1,28 @@
 CC=gcc
 HDIRS=Headers 
 CFLAGS=-I $(HDIRS) -lws2_32 -Wall -Wextra -pedantic -fasynchronous-unwind-tables -fexceptions -fstack-clash-protection -O2 -Werror=format-security -ggdb
-DEPS=Core/httpParser.h Utils/logger.h Core/routes.h Core/dataHandling.h Utils/fileHandling.h Utils/httpCreator.h app.h server.h
-OBJ=Core/httpParser.o Utils/logger.o Core/routes.o Core/dataHandling.o Utils/fileHandling.o Utils/httpCreator.o app.o server.o
+COREDEPS= httpParser.h RoutingTable.h requestHandler.h routes.h dataHandling.h
+UTILDEPS= logger.h fileHandling.h httpCreator.h
+DEPS=$(addprefix Utils/,$(UTILDEPS)) $(addprefix Core/,$(COREDEPS))  app.h server.h
+OBJ=$(addsuffix .o,$(basename $(DEPS)))
+OBJDIR=test
 OUTPUT=server
 
-$(BDIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)  
+all: $(OUTPUT)
+	@echo ====================================
+	@echo  Successfully Completed compilation
+	@echo ====================================
+
+$(OBJDIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OUTPUT): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-.PHONY: clean
+.PHONY: clean-o clean
+
+clean-o: 
+	rm -f $(OBJ)
 
 clean: 
 	rm -f $(OBJ) $(OUTPUT)

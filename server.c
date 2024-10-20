@@ -6,6 +6,7 @@
 
 #include "Core/httpParser.h"
 #include "Core/routes.h"
+#include "Core/requestHandler.h"
 #include "Utils/logger.h"
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
@@ -16,6 +17,7 @@ int main()
 {   
     setLogLevel(Connection);
     defineRoutes();
+    logInfo("Routes Defined");
     SOCKET lsock = INVALID_SOCKET;
     initialize(&lsock);
     slisten(&lsock);
@@ -106,16 +108,6 @@ void slisten(SOCKET* lsock){
 
 void handle(char* req, SOCKET* csock){
     request reqi = extractRequestInfo(req);
-    serve(reqi, csock);
-    return;
-}
-
-void serve(request req, SOCKET* csock){
-    if(strcmp(req.path, "/") == 0)
-    {
-        getIndex(csock, req);
-    } else {
-        get404(csock, req);
-    }
+    routeRequest(csock, reqi);
     return;
 }
