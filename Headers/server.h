@@ -4,7 +4,7 @@
 #define DEFAULT_PORT 8081
 #define BUFFER_SIZE 4096
 
-#pragma comment(lib,"Ws2_32.lib")
+// #pragma comment(lib,"Ws2_32.lib")
 
 void initialize(SOCKET* s);
 void slisten(SOCKET* lsock);

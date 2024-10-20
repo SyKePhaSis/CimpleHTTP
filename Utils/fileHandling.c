@@ -3,8 +3,8 @@
 #include<string.h>
 #include<stdlib.h>
 
-#include"fileHandling.h"
-#include"logger.h"
+#include"Utils/fileHandling.h"
+#include"Utils/logger.h"
 
 FileResp getFile(const char* path)
 {

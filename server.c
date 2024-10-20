@@ -10,10 +10,12 @@
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
 #include "server.h"
+#include "app.h"
 
 int main()
 {   
     setLogLevel(Connection);
+    defineRoutes();
     SOCKET lsock = INVALID_SOCKET;
     initialize(&lsock);
     slisten(&lsock);

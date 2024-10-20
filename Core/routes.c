@@ -1,11 +1,13 @@
-#include"routes.h"
-#include"../Utils/httpCreator.h"
-#include"../Utils/fileHandling.h"
-#include"../Utils/logger.h"
-#include"../Core/dataHandling.h"
-#include "../Core/httpParser.h"
+#include"Utils/httpCreator.h"
+#include"Utils/fileHandling.h"
+#include"Utils/logger.h"
+#include"Core/routes.h"
+#include"Core/dataHandling.h"
+#include"Core/httpParser.h"
 
 #include<WinSock2.h>
+
+RouteTable rt = {NULL, 0};
 
 void getIndex(SOCKET *csock, request req){
     FileResp fr = getFile("/index.html");
@@ -44,7 +46,26 @@ void get404(SOCKET *csock, request req){
     }
 }
 
-void defineRoute(enum METHODS method, char* path, char* html, void (*get)(SOCKET *cscok))
+RouteTable* getRt()
 {
+    return &rt;
+}
 
-};
+void defineRoute(enum METHODS method, char* path ,void (*func)(SOCKET *cscok, request req))
+{
+    Route* r = malloc(sizeof(Route));
+    r->method = method;
+    r->path = path;
+    r->func = func;
+    addToRouteTable(r);
+}
+
+void addToRouteTable(Route* r)
+{
+    if (rt.count == 100){
+        logError("Maximum Routes allowed reached");
+    }else {
+        rt.count++;
+    }
+    rt.routes[rt.count] = r;
+}

@@ -12,16 +12,19 @@ enum METHODS {
 };
 
 typedef struct Route {
-    enum METHODS* methods;
+    enum METHODS method;
     char* path;
-    char* file;
-    void (*get)(SOCKET *cscok);
+    void (*func)(SOCKET *cscok, request req);
 } Route;
 
-// Define Route Hash Tables
+typedef struct RouteTable {
+    Route* routes[100];
+    size_t count;
+} RouteTable;
 
 void getIndex(SOCKET *csock, request req);
 void get404(SOCKET *csock, request req);
-void defineRoute(enum METHODS method, char* path, char* html, void (*get)(SOCKET *cscok));
+void defineRoute(enum METHODS method, char* path, void (*get)(SOCKET *cscok, request req));
+void addToRouteTable(Route* r);
 
 #endif

@@ -2,8 +2,8 @@
 #include<string.h>
 #include<stdlib.h>
 
-#include"httpParser.h"
-#include"../Utils/logger.h"
+#include"Core/httpParser.h"
+#include"Utils/logger.h"
 
 sreq splitReq(char* req)
 {
@@ -89,7 +89,7 @@ request extractRequestInfo(char* req)
 
 void freeSREQ(sreq split_req)
 {
-    for(size_t i = 0; i < split_req.len; i++)
+    for(int i = 0; i < split_req.len; i++)
     {
         free(split_req.s_arr[i]);
     }
