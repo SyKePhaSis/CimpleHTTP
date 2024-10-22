@@ -1,7 +1,7 @@
 CC=gcc
 HDIRS=Headers 
 CFLAGS=-I $(HDIRS) -lws2_32 -Wall -Wextra -pedantic -fasynchronous-unwind-tables -fexceptions -fstack-clash-protection -O2 -Werror=format-security -ggdb
-COREDEPS= httpParser.h RoutingTable.h requestHandler.h routes.h dataHandling.h
+COREDEPS= httpParser.h RoutingTable.h requestHandler.h routes.h dataHandling.h assetRouting.h
 UTILDEPS= logger.h fileHandling.h httpCreator.h
 DEPS=$(addprefix Utils/,$(UTILDEPS)) $(addprefix Core/,$(COREDEPS))  app.h server.h
 OBJ=$(addsuffix .o,$(basename $(DEPS)))
@@ -19,9 +19,9 @@ $(OBJDIR)/%.o: %.c
 $(OUTPUT): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-.PHONY: clean-o clean
+.PHONY: cleano clean
 
-clean-o: 
+cleano: 
 	rm -f $(OBJ)
 
 clean: 
