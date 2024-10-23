@@ -6,7 +6,7 @@
 
 #define MAX_PATH_SIZE 512
 #define HTML_LOCATION "./Webpage/html/"
-#define CSS_LOCATION "./Webpage/css/"
+#define CSS_LOCATION "./Webpage/assets/css/"
 #define F_READ "r"
 
 typedef struct FileResp
@@ -22,5 +22,7 @@ FileResp getFile(const char *path);
 int fileExists(const char *path);
 long getFileLen(FILE *fp);
 char *getFileName(char *path);
+char *getFileExt(char *name);
+void dealloacteFileResp(FileResp *fileResp);
 
 #endif

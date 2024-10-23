@@ -16,7 +16,7 @@
 
 int main()
 {
-    setLogLevel(Connection);
+    setLogLevel(Info);
     defineRoutes();
     printRoutes();
     logInfo("Routes Defined");

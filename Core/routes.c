@@ -5,15 +5,17 @@
 #include "Core/dataHandling.h"
 #include "Core/httpParser.h"
 #include "Core/RoutingTable.h"
+#include "Utils/memmory.h"
 
 #include <WinSock2.h>
+#include <stdlib.h>
 
 RouteTable rt = {.count = 0};
 
 void getIndex(SOCKET *csock, request req)
 {
     FileResp fr = getFile("index.html");
-    if (fr.data != NULL)
+    if (fr.data != NULL || !fr.found)
     {
         httpResponse res = getHttpReq();
         addVersion(&res, "HTTP/1.1");
@@ -38,7 +40,7 @@ void getAsset(SOCKET *csock, request req)
     if (name != NULL)
     {
         FileResp fr = getFile(name);
-        if (fr.data != NULL)
+        if (fr.data != NULL || !fr.found)
         {
             httpResponse res = getHttpReq();
             addVersion(&res, "HTTP/1.1");
@@ -85,7 +87,7 @@ void get404(SOCKET *csock, request req)
 
 void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, request req))
 {
-    Route *r = malloc(sizeof(Route));
+    Route *r = allocate(sizeof(Route));
     r->method = method;
     r->path = path;
     r->allocated = 0;
@@ -95,7 +97,7 @@ void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, re
 
 void defineAssetRoute(char *path)
 {
-    Route *r = malloc(sizeof(Route));
+    Route *r = allocate(sizeof(Route));
     r->method = GET;
     r->path = path;
     r->func = getAsset;

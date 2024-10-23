@@ -1,44 +1,28 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-#include"Core/httpParser.h"
-#include"Utils/logger.h"
+#include "Core/httpParser.h"
+#include "Utils/memmory.h"
+#include "Utils/logger.h"
 
-sreq splitReq(char* req)
+sreq splitReq(char *req)
 {
     logInfo("Splitting the Request");
     sreq resp;
     resp.finished = 0;
-    char **out = malloc(sizeof(char*));
-    if(out == NULL)
-    {
-        logError("Couldn't allocate memory to save request");
-        return resp;
-    }
+    char **out = allocate(sizeof(char *));
 
     char *line;
     int c = 0;
     line = strtok(req, "\r\n");
     logInfo("Check");
-    while(line != NULL)
+    while (line != NULL)
     {
         c += 1;
-        out = realloc(out, c * sizeof(char*));
-        if(!out)
-        {
-            logError("Couldn't append allocated memory to save request.");
-            return resp;
-        }
-
-        out[c-1] = malloc(sizeof(char) * (strlen(line) + 1));
-        if(!out[c-1])
-        {
-            logError("Couldn't Allocate Memory to save Line");
-            return resp;
-        }
-        strcpy(out[c-1], line);
-        
+        out = reallocate(out, c * sizeof(char *));
+        out[c - 1] = allocate(sizeof(char) * (strlen(line) + 1));
+        strcpy(out[c - 1], line);
         line = strtok(NULL, "\r\n");
     }
     resp.finished = 1;
@@ -47,18 +31,21 @@ sreq splitReq(char* req)
     return resp;
 }
 
-void getInfo(request* req, char* line)
+void getInfo(request *req, char *line)
 {
-    char* fs[3] = {0};
-    char* tok;
+    char *fs[3] = {0};
+    char *tok;
     int c = 0;
     tok = strtok(line, " ");
-    while(tok != NULL)
+    while (tok != NULL)
     {
-        if(c < 3) {
-            fs[c] = malloc((strlen(tok) + 1)*sizeof(char));
+        if (c < 3)
+        {
+            fs[c] = allocate((strlen(tok) + 1) * sizeof(char));
             strcpy(fs[c], tok);
-        } else {
+        }
+        else
+        {
             logError("Needed more space to store Method");
         }
         c++;
@@ -73,37 +60,38 @@ void getInfo(request* req, char* line)
 // char* getQueryParams(char* req){return NULL;}
 // int verifyRequest(char* req){return 0;}
 
-request extractRequestInfo(char* req)
+request extractRequestInfo(char *req)
 {
     request ret;
     ret.failed = 0;
     sreq split_req = splitReq(req);
-    if(!split_req.finished)
+    if (!split_req.finished)
     {
         return ret;
     }
     getInfo(&ret, split_req.s_arr[0]);
-    freeSREQ(split_req);
+    dealloacteSREQ(split_req);
     return ret;
 }
 
-void freeSREQ(sreq split_req)
+void dealloacteSREQ(sreq split_req)
 {
-    for(int i = 0; i < split_req.len; i++)
+    for (int i = 0; i < split_req.len; i++)
     {
-        free(split_req.s_arr[i]);
+        deallocate(split_req.s_arr[i]);
+        split_req.s_arr[i] = NULL;
     }
-    free(split_req.s_arr);
-    logInfo("Freed SREQ Object");
+    deallocate(split_req.s_arr);
+    split_req.s_arr = NULL;
+    logInfo("dealloacted SREQ Object");
 }
 
 // Helpers
 void printSreq(sreq req)
 {
-    for(int i = 0; i < req.len; i++)
+    for (int i = 0; i < req.len; i++)
     {
-        printf("%d: %s \n", i,*(req.s_arr + i));
+        printf("%d: %s \n", i, *(req.s_arr + i));
     }
     return;
 }
-

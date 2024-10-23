@@ -1,6 +1,7 @@
 #include "Core/Routes.h"
 #include "Core/assetRouting.h"
 #include "Utils/logger.h"
+#include "Utils/memmory.h"
 
 #include <stdio.h>
 #include <windows.h>
@@ -9,7 +10,7 @@
 Assets getAssets()
 {
     WIN32_FIND_DATA ffd;
-    TCHAR *szDir = malloc(sizeof(PTCHAR) * (strlen(CSS_ASSET_FOLDER) + 3));
+    TCHAR *szDir = allocate(sizeof(PTCHAR) * (strlen(CSS_ASSET_FOLDER) + 3));
     HANDLE hFind = INVALID_HANDLE_VALUE;
     DWORD dwError = 0;
     Assets assetsFL;
@@ -24,7 +25,7 @@ Assets getAssets()
     if (INVALID_HANDLE_VALUE == hFind)
     {
         logError("Couldn't List the Directory");
-        free(szDir);
+        deallocate(szDir);
         assetsFL.array = NULL;
         return assetsFL;
     }
@@ -41,23 +42,13 @@ Assets getAssets()
             assetsFL.size++;
             if (assetsFL.size == 1)
             {
-                assetsFL.array = malloc(sizeof(char *) * (assetsFL.size));
+                assetsFL.array = allocate(sizeof(char *) * (assetsFL.size));
             }
             else
             {
-                assetsFL.array = realloc(assetsFL.array, sizeof(char *) * (assetsFL.size));
+                assetsFL.array = reallocate(assetsFL.array, sizeof(char *) * (assetsFL.size));
             }
-            if (assetsFL.array == NULL)
-            {
-                logError("Couldn't allocate memmory to create assetFL");
-                return assetsFL;
-            }
-            assetsFL.array[assetsFL.size - 1] = malloc(sizeof(char) * (strlen(ffd.cFileName) + 1));
-            if (assetsFL.array[assetsFL.size - 1] == NULL)
-            {
-                logError("Couldn't allocate Space to store Asset Path");
-                return assetsFL;
-            }
+            assetsFL.array[assetsFL.size - 1] = allocate(sizeof(char) * (strlen(ffd.cFileName) + 1));
             StringCchCopyA(assetsFL.array[assetsFL.size - 1], strlen(ffd.cFileName) + 1, ffd.cFileName);
             logInfo("<FILE>  %s  ", ffd.cFileName);
         }
@@ -65,7 +56,7 @@ Assets getAssets()
 
     if (assetsFL.size == 1)
     {
-        free(assetsFL.array);
+        deallocate(assetsFL.array);
         assetsFL.array = NULL;
     }
 
@@ -75,7 +66,7 @@ Assets getAssets()
         logError("Error occured: %d", dwError);
     }
     FindClose(hFind);
-    free(szDir);
+    deallocate(szDir);
     return assetsFL;
 }
 
@@ -89,7 +80,7 @@ void defineAssetRoutes()
         for (size_t i = 0; i < assets.size; i++)
         {
             size = strlen(assets.array[i]) + strlen(CSS_ASSET_ROUTE) + 1;
-            char *path = malloc(size);
+            char *path = allocate(size);
             StringCchCopyA(path, size, CSS_ASSET_ROUTE);
             StringCchCatA(path, size, assets.array[i]);
             defineAssetRoute(path);
@@ -129,9 +120,9 @@ void cleanUp(Assets *assets)
     {
         for (size_t i = 0; i < assets->size; i++)
         {
-            free(assets->array[i]);
+            deallocate(assets->array[i]);
         }
-        free(assets->array);
+        deallocate(assets->array);
     }
     else
     {
