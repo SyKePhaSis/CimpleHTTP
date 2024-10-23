@@ -6,6 +6,6 @@
 void *allocate(size_t size);
 void deallocate(void *block);
 void *reallocate(void *block, size_t size);
-int getAllocations(void);
+size_t getAllocations(void);
 
 #endif

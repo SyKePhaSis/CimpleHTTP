@@ -19,7 +19,7 @@ sreq splitReq(char *req)
     logInfo("Check");
     while (line != NULL)
     {
-        c += 1;
+        c++;
         out = reallocate(out, c * sizeof(char *));
         out[c - 1] = allocate(sizeof(char) * (strlen(line) + 1));
         strcpy(out[c - 1], line);
@@ -33,7 +33,7 @@ sreq splitReq(char *req)
 
 void getInfo(request *req, char *line)
 {
-    char *fs[3] = {0};
+    char *fs[3];
     char *tok;
     int c = 0;
     tok = strtok(line, " ");
@@ -82,8 +82,14 @@ void dealloacteSREQ(sreq split_req)
         split_req.s_arr[i] = NULL;
     }
     deallocate(split_req.s_arr);
-    split_req.s_arr = NULL;
     logInfo("dealloacted SREQ Object");
+}
+
+void deallocateReq(request *req)
+{
+    deallocate(req->version);
+    deallocate(req->method);
+    deallocate(req->path);
 }
 
 // Helpers

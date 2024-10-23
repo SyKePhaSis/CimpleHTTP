@@ -103,7 +103,8 @@ char *flushHttpRes(httpResponse *res)
         if (res->body != NULL)
         {
             logInfo("Alocating %lu bytes to memmory", strlen(res->body) * sizeof(char) + 2000);
-            buf = allocate(strlen(res->body) * sizeof(char) + 500);
+            logInfo("Had %lu allocations not freed", getAllocations());
+            buf = allocate(strlen(res->body) * sizeof(char) + 2000);
         }
         else
         {
@@ -165,22 +166,19 @@ void addCRLF(char *str)
 
 void dealloacteHttpObj(httpResponse *res)
 {
-    logInfo("dealloacteing Headers Array");
+    logInfo("deallocating Headers Array");
     for (size_t i = 0; i < res->headers.length; i++)
     {
         deallocate(res->headers.array[i]);
-        res->headers.array[i] = NULL;
     }
     deallocate(res->headers.array);
-    res->headers.array = NULL;
-    logInfo("dealloacteing Info Array");
+    logInfo("deallocating Info Array");
     for (size_t i = 0; i < res->info.length; i++)
     {
         deallocate(res->info.array[i]);
-        res->info.array[i] = NULL;
     }
     deallocate(res->info.array);
-    res->info.array = NULL;
+    deallocate(res->body);
     logInfo("dealloacted Object");
 }
 

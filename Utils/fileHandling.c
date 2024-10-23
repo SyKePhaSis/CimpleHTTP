@@ -12,18 +12,8 @@ FileResp getFile(const char *path)
     FileResp res;
     char _buf[MAX_PATH_SIZE];
     char *ext = getFileExt(path);
-    if (strcmp(ext, "html") == 0)
-    {
-        strcpy(_buf, HTML_LOCATION);
-    }
-    else if (strcmp(ext, "css") == 0)
-    {
-        strcpy(_buf, CSS_LOCATION);
-    }
-    else
-    {
-        strcpy(_buf, HTML_LOCATION);
-    }
+    char *location = getFilePath(ext);
+    strcpy(_buf, location);
     logInfo("%s", path);
     strcat(_buf, path);
     if (!fileExists(_buf))
@@ -41,9 +31,10 @@ FileResp getFile(const char *path)
     }
     res.len = getFileLen(res.fp);
     res.found = 1;
-    res.data = allocate(sizeof(char) * (res.len - 1));
+    res.data = allocate(sizeof(char) * (res.len + 1));
     logInfo("Filesize: %lu", res.len);
     fread(res.data, 1, res.len, res.fp);
+    fclose(res.fp);
     return res;
 }
 
@@ -86,10 +77,30 @@ void dealloacteFileResp(FileResp *fileResp)
 {
     if (fileResp->data != NULL)
     {
-        logInfo("dealloacteing fileResp data");
+        logInfo("deallocating fileResp data");
         deallocate(fileResp->data);
         fileResp->data = NULL;
         fclose(fileResp->fp);
         fileResp->fp = NULL;
+    }
+}
+
+char *getFilePath(char *ext)
+{
+    if (strcmp(ext, "html") == 0)
+    {
+        return HTML_LOCATION;
+    }
+    else if (strcmp(ext, "css") == 0)
+    {
+        return CSS_LOCATION;
+    }
+    else if (strcmp(ext, "js") == 0)
+    {
+        return JS_LOCATION;
+    }
+    else if (strcmp(ext, "ttf") == 0)
+    {
+        return TTF_LOCATION;
     }
 }

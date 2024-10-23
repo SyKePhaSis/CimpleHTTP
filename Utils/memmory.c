@@ -21,13 +21,13 @@ void deallocate(void *block)
     if (block != NULL)
     {
         free(block);
+        block = NULL;
+        allocations--;
     }
     else
     {
-        logError("Space was NULL, couldn't deallocate");
+        logError("Space was NULL, couldn't deallocated");
     }
-    allocations--;
-    block = NULL;
 }
 
 void *reallocate(void *block, size_t size)
@@ -41,7 +41,7 @@ void *reallocate(void *block, size_t size)
     return space;
 }
 
-int getAllocations()
+size_t getAllocations()
 {
     return allocations;
 }

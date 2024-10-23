@@ -1,24 +1,45 @@
 #include "Core/Routes.h"
 #include "Core/assetRouting.h"
+#include "Utils/fileHandling.h"
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
 
 #include <stdio.h>
 #include <windows.h>
 #include <strsafe.h>
+#include <winnt.h>
 
 Assets getAssets()
 {
+    Assets assetsFL = {
+        .array = NULL,
+        .folder_count = 0,
+        .folders = allocate(sizeof(char *) * 5),
+        .size = 0};
+    char *path = NULL;
+    getAssetsFromFolder(ASSET_FOLDER, &assetsFL);
+    for (size_t i = 0; i < assetsFL.folder_count; i++)
+    {
+        size_t allocation_size = strlen(ASSET_FOLDER) + strlen(assetsFL.folders[i]) + 2;
+        path = allocate(allocation_size);
+        StringCchCopy(path, allocation_size, ASSET_FOLDER);
+        StringCchCat(path, allocation_size, "/");
+        StringCchCat(path, allocation_size, assetsFL.folders[i]);
+        getAssetsFromFolder(path, &assetsFL);
+        deallocate(path);
+    }
+    return assetsFL;
+}
+
+void getAssetsFromFolder(const char *path, Assets *assets)
+{
     WIN32_FIND_DATA ffd;
-    TCHAR *szDir = allocate(sizeof(PTCHAR) * (strlen(CSS_ASSET_FOLDER) + 3));
+    TCHAR *szDir = allocate(sizeof(PTCHAR) * (strlen(path) + 3));
     HANDLE hFind = INVALID_HANDLE_VALUE;
     DWORD dwError = 0;
-    Assets assetsFL;
-    assetsFL.size = 0;
-    assetsFL.array = NULL;
 
-    StringCchCopy(szDir, (strlen(CSS_ASSET_FOLDER) + 3), TEXT(CSS_ASSET_FOLDER));
-    StringCchCat(szDir, (strlen(CSS_ASSET_FOLDER) + 3), TEXT("/*"));
+    StringCchCopy(szDir, (strlen(path) + 3), path);
+    StringCchCat(szDir, (strlen(path) + 3), TEXT("/*"));
     logSuccess("Path: %s", szDir);
 
     hFind = FindFirstFile(szDir, &ffd);
@@ -26,38 +47,43 @@ Assets getAssets()
     {
         logError("Couldn't List the Directory");
         deallocate(szDir);
-        assetsFL.array = NULL;
-        return assetsFL;
     }
 
-    logInfo("------ ASSETS DIRECTORY ------");
+    logInfo("------ %s ASSETS DIRECTORY ------", path);
     do
     {
         if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
             logInfo("<DIR>   %s  ", ffd.cFileName);
+            if (strcmp(ffd.cFileName, ".") != 0 && strcmp(ffd.cFileName, "..") != 0)
+            {
+                assets->folders[assets->folder_count] = allocate(strlen(ffd.cFileName) + 1);
+                StringCchCopyA(assets->folders[assets->folder_count], strlen(ffd.cFileName) + 1, ffd.cFileName);
+                assets->folder_count++;
+                logSuccess("Folder added %s", ffd.cFileName);
+            }
         }
         else
         {
-            assetsFL.size++;
-            if (assetsFL.size == 1)
+            assets->size++;
+            if (assets->size == 1)
             {
-                assetsFL.array = allocate(sizeof(char *) * (assetsFL.size));
+                assets->array = allocate(sizeof(char *) * (assets->size));
             }
             else
             {
-                assetsFL.array = reallocate(assetsFL.array, sizeof(char *) * (assetsFL.size));
+                assets->array = reallocate(assets->array, sizeof(char *) * (assets->size));
             }
-            assetsFL.array[assetsFL.size - 1] = allocate(sizeof(char) * (strlen(ffd.cFileName) + 1));
-            StringCchCopyA(assetsFL.array[assetsFL.size - 1], strlen(ffd.cFileName) + 1, ffd.cFileName);
+            assets->array[assets->size - 1] = allocate(sizeof(char) * (strlen(ffd.cFileName) + 1));
+            StringCchCopyA(assets->array[assets->size - 1], strlen(ffd.cFileName) + 1, ffd.cFileName);
             logInfo("<FILE>  %s  ", ffd.cFileName);
         }
     } while (FindNextFile(hFind, &ffd) != 0);
 
-    if (assetsFL.size == 1)
+    if (assets->size == 1)
     {
-        deallocate(assetsFL.array);
-        assetsFL.array = NULL;
+        deallocate(assets->array);
+        assets->array = NULL;
     }
 
     dwError = GetLastError();
@@ -67,7 +93,6 @@ Assets getAssets()
     }
     FindClose(hFind);
     deallocate(szDir);
-    return assetsFL;
 }
 
 void defineAssetRoutes()
@@ -81,9 +106,10 @@ void defineAssetRoutes()
         {
             size = strlen(assets.array[i]) + strlen(CSS_ASSET_ROUTE) + 1;
             char *path = allocate(size);
-            StringCchCopyA(path, size, CSS_ASSET_ROUTE);
+            char *location = getAssetLocation(assets.array[i]);
+            StringCchCopyA(path, size, location);
             StringCchCatA(path, size, assets.array[i]);
-            defineAssetRoute(path);
+            defineAssetRoute(path, CSS);
         }
     }
     else
@@ -94,6 +120,23 @@ void defineAssetRoutes()
 }
 
 // HELP
+
+char *getAssetLocation(char *filename)
+{
+    char *ext = getFileExt(filename);
+    if (strcmp(ext, "css") == 0)
+    {
+        return CSS_ASSET_ROUTE;
+    }
+    else if (strcmp(ext, "js") == 0)
+    {
+        return JS_ASSET_ROUTE;
+    }
+    else if (strcmp(ext, "ttf") == 0)
+    {
+        return TTF_ASSET_ROUTE;
+    }
+}
 
 void printFolderContents()
 {
@@ -123,6 +166,11 @@ void cleanUp(Assets *assets)
             deallocate(assets->array[i]);
         }
         deallocate(assets->array);
+        for (size_t i = 0; i < assets->folder_count; i++)
+        {
+            deallocate(assets->folders[i]);
+        }
+        deallocate(assets->folders);
     }
     else
     {

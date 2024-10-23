@@ -1,10 +1,10 @@
-#include "Utils/httpCreator.h"
-#include "Utils/fileHandling.h"
-#include "Utils/logger.h"
 #include "Core/routes.h"
 #include "Core/dataHandling.h"
 #include "Core/httpParser.h"
 #include "Core/RoutingTable.h"
+#include "Utils/httpCreator.h"
+#include "Utils/fileHandling.h"
+#include "Utils/logger.h"
 #include "Utils/memmory.h"
 
 #include <WinSock2.h>
@@ -34,7 +34,7 @@ void getIndex(SOCKET *csock, request req)
     }
 }
 
-void getAsset(SOCKET *csock, request req)
+void getCSSAsset(SOCKET *csock, request req)
 {
     char *name = getFileName(req.path);
     if (name != NULL)
@@ -47,6 +47,36 @@ void getAsset(SOCKET *csock, request req)
             addResCode(&res, "200");
             addMethod(&res, "OK");
             addHeader(&res, "Content-Type: text/css");
+            addBody(&res, &fr);
+            char *buf = flushHttpRes(&res);
+            sendData(csock, buf);
+            logConnection("%s %s 200 OK", req.version, req.path);
+        }
+        else
+        {
+            logError("FileResp returned with NULL data");
+            get404(csock, req);
+        }
+    }
+    else
+    {
+        get404(csock, req);
+    }
+}
+
+void getJSAsset(SOCKET *csock, request req)
+{
+    char *name = getFileName(req.path);
+    if (name != NULL)
+    {
+        FileResp fr = getFile(name);
+        if (fr.data != NULL || !fr.found)
+        {
+            httpResponse res = getHttpReq();
+            addVersion(&res, "HTTP/1.1");
+            addResCode(&res, "200");
+            addMethod(&res, "OK");
+            addHeader(&res, "Content-Type: text/javascript");
             addBody(&res, &fr);
             char *buf = flushHttpRes(&res);
             sendData(csock, buf);
@@ -95,12 +125,15 @@ void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, re
     addToRouteTable(r, &rt);
 }
 
-void defineAssetRoute(char *path)
+void defineAssetRoute(char *path, enum ASSET_TYPE asset)
 {
     Route *r = allocate(sizeof(Route));
     r->method = GET;
     r->path = path;
-    r->func = getAsset;
+    if (asset == CSS)
+    {
+        r->func = getCSSAsset;
+    }
     r->allocated = 1;
     addToRouteTable(r, &rt);
 }

@@ -30,5 +30,6 @@ request extractRequestInfo(char *req);
 void getInfo(request *req, char *line);
 void printSreq(sreq req);
 void dealloacteSREQ(sreq split_req);
+void deallocateReq(request *req);
 
 #endif

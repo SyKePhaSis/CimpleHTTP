@@ -14,5 +14,6 @@ void routeRequest(SOCKET *csock, request req)
         return;
     }
     r->func(csock, req);
+    deallocateReq(&req);
     return;
 }
