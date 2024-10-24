@@ -1,6 +1,4 @@
-1. Automatically define assets routes
-2. Test Static Application
-3. Implement Base Responses
-4. Implement MultiThreading
-5. Caching Static File Returns in Memmory
-6. On the Fly Asset Directory Reloads
+1. Implement Base Responses
+2. Implement MultiThreading
+3. Caching Static File Returns in Memmory
+4. On the Fly Asset Directory Reloads

@@ -19,10 +19,18 @@ typedef struct httpResponse
 {
     dyn_arr info;
     dyn_arr headers;
-    char *body;
+    void *body;
+    size_t body_size;
 } httpResponse;
 
-httpResponse getHttpReq(void);
+typedef struct resBuffer
+{
+    void *buffer;
+    size_t size;
+} resBuffer;
+
+httpResponse
+getHttpReq(void);
 void addBody(httpResponse *res, FileResp *fres);
 void addVersion(httpResponse *res, const char *version);
 void addMethod(httpResponse *res, const char *method);
@@ -30,10 +38,9 @@ void addResCode(httpResponse *res, const char *code);
 void addHeader(httpResponse *res, const char *line);
 void addHeaderFormated(httpResponse *res, const char *fmt, ...);
 void addInfo(httpResponse *res, const char *line);
-char *flushHttpRes(httpResponse *res);
+resBuffer flushHttpRes(httpResponse *res);
 int proper(httpResponse *res);
 void addCRLF(char *str);
 void dealloacteHttpObj(httpResponse *res);
-void printHttpRes(httpResponse *res);
 
 #endif

@@ -23,8 +23,8 @@ void getIndex(SOCKET *csock, request req)
         addMethod(&res, "OK");
         addHeader(&res, "Content-Type: text/html");
         addBody(&res, &fr);
-        char *buf = flushHttpRes(&res);
-        sendData(csock, buf);
+        resBuffer buf = flushHttpRes(&res);
+        sendData(csock, buf.buffer, buf.size);
         logConnection("%s %s 200 OK", req.version, req.path);
     }
     else
@@ -34,7 +34,7 @@ void getIndex(SOCKET *csock, request req)
     }
 }
 
-void getCSSAsset(SOCKET *csock, request req)
+void getCssAsset(SOCKET *csock, request req)
 {
     char *name = getFileName(req.path);
     if (name != NULL)
@@ -48,8 +48,8 @@ void getCSSAsset(SOCKET *csock, request req)
             addMethod(&res, "OK");
             addHeader(&res, "Content-Type: text/css");
             addBody(&res, &fr);
-            char *buf = flushHttpRes(&res);
-            sendData(csock, buf);
+            resBuffer buf = flushHttpRes(&res);
+            sendData(csock, buf.buffer, buf.size);
             logConnection("%s %s 200 OK", req.version, req.path);
         }
         else
@@ -64,7 +64,7 @@ void getCSSAsset(SOCKET *csock, request req)
     }
 }
 
-void getJSAsset(SOCKET *csock, request req)
+void getJsAsset(SOCKET *csock, request req)
 {
     char *name = getFileName(req.path);
     if (name != NULL)
@@ -78,8 +78,75 @@ void getJSAsset(SOCKET *csock, request req)
             addMethod(&res, "OK");
             addHeader(&res, "Content-Type: text/javascript");
             addBody(&res, &fr);
-            char *buf = flushHttpRes(&res);
-            sendData(csock, buf);
+            resBuffer buf = flushHttpRes(&res);
+            sendData(csock, buf.buffer, buf.size);
+            logConnection("%s %s 200 OK", req.version, req.path);
+        }
+        else
+        {
+            logError("FileResp returned with NULL data");
+            get404(csock, req);
+        }
+    }
+    else
+    {
+        get404(csock, req);
+    }
+}
+
+void getFontAsset(SOCKET *csock, request req)
+{
+    char *name = getFileName(req.path);
+    char type[30] = "Content-Type: font/";
+    if (name != NULL)
+    {
+        FileResp fr = getFile(name);
+        if (fr.data != NULL || !fr.found)
+        {
+            httpResponse res = getHttpReq();
+            addVersion(&res, "HTTP/1.1");
+            addResCode(&res, "200");
+            addMethod(&res, "OK");
+            char *ext = getFileExt(req.path);
+            strcat(type, ext);
+            addHeader(&res, type);
+            addHeader(&res, "Accept-ranges: bytes");
+            addBody(&res, &fr);
+            resBuffer buf = flushHttpRes(&res);
+            sendData(csock, buf.buffer, buf.size);
+            logConnection("%s %s 200 OK", req.version, req.path);
+        }
+        else
+        {
+            logError("FileResp returned with NULL data");
+            get404(csock, req);
+        }
+    }
+    else
+    {
+        get404(csock, req);
+    }
+}
+
+void getImageAsset(SOCKET *csock, request req)
+{
+    char *name = getFileName(req.path);
+    char type[30] = "Content-Type: image/";
+    if (name != NULL)
+    {
+        FileResp fr = getFile(name);
+        if (fr.data != NULL || !fr.found)
+        {
+            httpResponse res = getHttpReq();
+            addVersion(&res, "HTTP/1.1");
+            addResCode(&res, "200");
+            addMethod(&res, "OK");
+            char *ext = getFileExt(req.path);
+            strcat(type, ext);
+            addHeader(&res, type);
+            addBody(&res, &fr);
+            resBuffer buf = flushHttpRes(&res);
+            sendData(csock, buf.buffer, buf.size);
             logConnection("%s %s 200 OK", req.version, req.path);
         }
         else
@@ -105,8 +172,8 @@ void get404(SOCKET *csock, request req)
         addMethod(&res, "Not Found");
         addHeader(&res, "Content-Type: text/html");
         addBody(&res, &fr);
-        char *buf = flushHttpRes(&res);
-        sendData(csock, buf);
+        resBuffer buf = flushHttpRes(&res);
+        sendData(csock, buf.buffer, buf.size);
         logConnection("%s %s 404 Not Found", req.version, req.path);
     }
     else
@@ -130,20 +197,37 @@ void defineAssetRoute(char *path, enum ASSET_TYPE asset)
     Route *r = allocate(sizeof(Route));
     r->method = GET;
     r->path = path;
-    if (asset == CSS)
-    {
-        r->func = getCSSAsset;
-    }
+    r->func = getFunctionForAsset(asset);
     r->allocated = 1;
     addToRouteTable(r, &rt);
 }
 
-// Helper Function
+rFunc getFunctionForAsset(enum ASSET_TYPE asset)
+{
+    if (asset == CSS)
+    {
+        return getCssAsset;
+    }
+    else if (asset == JS)
+    {
+        return getJsAsset;
+    }
+    else if (asset == FONT)
+    {
+        return getFontAsset;
+    }
+    else if (asset == IMAGE)
+    {
+        return getImageAsset;
+    }
+}
 
 RouteTable *getRoutingTable()
 {
     return &rt;
 }
+
+// Helper Functions
 
 void printRoutes()
 {

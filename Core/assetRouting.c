@@ -104,12 +104,13 @@ void defineAssetRoutes()
     {
         for (size_t i = 0; i < assets.size; i++)
         {
-            size = strlen(assets.array[i]) + strlen(CSS_ASSET_ROUTE) + 1;
-            char *path = allocate(size);
             char *location = getAssetLocation(assets.array[i]);
+            size = strlen(assets.array[i]) + strlen(location) + 1;
+            char *path = allocate(size);
             StringCchCopyA(path, size, location);
             StringCchCatA(path, size, assets.array[i]);
-            defineAssetRoute(path, CSS);
+            enum ASSET_TYPE type = getAssetType(assets.array[i]);
+            defineAssetRoute(path, type);
         }
     }
     else
@@ -118,8 +119,6 @@ void defineAssetRoutes()
     }
     cleanUp(&assets);
 }
-
-// HELP
 
 char *getAssetLocation(char *filename)
 {
@@ -132,11 +131,38 @@ char *getAssetLocation(char *filename)
     {
         return JS_ASSET_ROUTE;
     }
-    else if (strcmp(ext, "ttf") == 0)
+    else if (strcmp(ext, "ttf") == 0 || strcmp(ext, "woff") == 0 || strcmp(ext, "woff2") == 0)
     {
-        return TTF_ASSET_ROUTE;
+        return FONT_ASSET_ROUTE;
+    }
+    else if (strcmp(ext, "png") == 0 || strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
+    {
+        return IMAGE_ASSET_ROUTE;
     }
 }
+
+enum ASSET_TYPE getAssetType(char *filename)
+{
+    char *ext = getFileExt(filename);
+    if (strcmp(ext, "css") == 0)
+    {
+        return CSS;
+    }
+    else if (strcmp(ext, "js") == 0)
+    {
+        return JS;
+    }
+    else if (strcmp(ext, "ttf") == 0 || strcmp(ext, "woff") == 0 || strcmp(ext, "woff2") == 0)
+    {
+        return FONT;
+    }
+    else if (strcmp(ext, "png") == 0 || strcmp(ext, "jpg") == 0 || strcmp(ext, "jpeg") == 0)
+    {
+        return IMAGE;
+    }
+}
+
+// HELP
 
 void printFolderContents()
 {

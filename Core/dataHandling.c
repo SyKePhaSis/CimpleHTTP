@@ -4,9 +4,9 @@
 #include <WinSock2.h>
 #include <stdlib.h>
 
-int sendData(SOCKET *csock, char *buf)
+int sendData(SOCKET *csock, void *buf, size_t size)
 {
-    size_t bytes_sent = send(*csock, buf, strlen(buf) * sizeof(char), 0);
+    size_t bytes_sent = send(*csock, buf, size, 0);
     if (bytes_sent == (size_t)SOCKET_ERROR)
     {
         logError("Coudln't send Response.");
@@ -14,7 +14,7 @@ int sendData(SOCKET *csock, char *buf)
         deallocate(buf);
         return 0;
     }
-    else if (bytes_sent != strlen(buf))
+    else if (bytes_sent != size)
     {
         logError("Didn't send all data: sent %d", bytes_sent);
         deallocate(buf);

@@ -5,7 +5,7 @@
 #define ASSET_FOLDER "./WebPage/assets"
 #define CSS_ASSET_ROUTE "/assets/css/"
 #define JS_ASSET_ROUTE "/assets/js/"
-#define TTF_ASSET_ROUTE "/assets/ttf/"
+#define FONT_ASSET_ROUTE "/assets/ttf/"
 #define IMAGE_ASSET_ROUTE "/assets/images/"
 
 typedef struct Assets
@@ -22,5 +22,6 @@ void printFolderContents();
 void cleanUp(Assets *assets);
 void getAssetsFromFolder(const char *path, Assets *assets);
 char *getAssetLocation(char *filename);
+enum ASSET_TYPE getAssetType(char *filename);
 
 #endif

@@ -9,13 +9,14 @@
 #define CSS_LOCATION "./Webpage/assets/css/"
 #define JS_LOCATION "./Webpage/assets/js/"
 #define TTF_LOCATION "./Webpage/assets/ttf/"
-#define F_READ "r"
+#define IMAGE_LOCATION "./Webpage/assets/images/"
+#define F_READ "rb"
 
 typedef struct FileResp
 {
     FILE *fp;
     char *path;
-    char *data;
+    void *data;
     int found;
     int len;
 } FileResp;

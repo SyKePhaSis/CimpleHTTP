@@ -25,7 +25,8 @@ httpResponse getHttpReq(void)
 void addBody(httpResponse *res, FileResp *fres)
 {
     res->body = fres->data;
-    addHeaderFormated(res, "Content-Length: %llu", strlen(fres->data) * sizeof(char));
+    res->body_size = fres->len + 1;
+    addHeaderFormated(res, "Content-Length: %llu", fres->len * sizeof(char) + 1);
     logInfo("Added Body");
 }
 
@@ -94,17 +95,18 @@ void addHeader(httpResponse *res, const char *line)
     return;
 }
 
-char *flushHttpRes(httpResponse *res)
+resBuffer flushHttpRes(httpResponse *res)
 {
     if (proper(res))
     {
         char *buf = NULL;
+        size_t bufsize = 0;
         logInfo("Http Response is Proper");
         if (res->body != NULL)
         {
-            logInfo("Alocating %lu bytes to memmory", strlen(res->body) * sizeof(char) + 2000);
+            logInfo("Alocating %lu bytes to memmory", res->body_size + 2000);
             logInfo("Had %lu allocations not freed", getAllocations());
-            buf = allocate(strlen(res->body) * sizeof(char) + 2000);
+            buf = allocate(res->body_size + 2000);
         }
         else
         {
@@ -128,13 +130,19 @@ char *flushHttpRes(httpResponse *res)
         addCRLF(buf);
         addCRLF(buf);
         logInfo("Adding Body");
-        strcat(buf, res->body);
+        bufsize += strlen(buf) - 2;
+        memcpy(buf + bufsize, res->body, res->body_size);
+        bufsize += res->body_size;
         dealloacteHttpObj(res);
         logInfo("Flushed Request");
-        return buf;
+        resBuffer rb;
+        rb.buffer = (void *)buf;
+        rb.size = bufsize;
+        return rb;
     }
     dealloacteHttpObj(res);
-    return NULL;
+    resBuffer rb = {.buffer = NULL, .size = 0};
+    return rb;
 }
 
 int proper(httpResponse *res)
@@ -178,23 +186,6 @@ void dealloacteHttpObj(httpResponse *res)
         deallocate(res->info.array[i]);
     }
     deallocate(res->info.array);
-    deallocate(res->body);
+    deallocate((char *)res->body);
     logInfo("dealloacted Object");
-}
-
-void printHttpRes(httpResponse *res)
-{
-    if (proper(res))
-    {
-        logInfo("Printing Flushed Res: ");
-        char *flushed = flushHttpRes(res);
-        if (flushed != NULL)
-        {
-            printf("%s", flushed);
-        }
-        else
-        {
-            logWarning("Couldn't print flushed Http Response");
-        }
-    }
 }

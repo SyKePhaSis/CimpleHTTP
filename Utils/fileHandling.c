@@ -99,8 +99,12 @@ char *getFilePath(char *ext)
     {
         return JS_LOCATION;
     }
-    else if (strcmp(ext, "ttf") == 0)
+    else if (strcmp(ext, "ttf") == 0 || strcmp(ext, "woff") == 0 || strcmp(ext, "woff2") == 0)
     {
         return TTF_LOCATION;
+    }
+    else if (strcmp(ext, "jpeg") == 0 || strcmp(ext, "jpg") == 0 || strcmp(ext, "png") == 0)
+    {
+        return IMAGE_LOCATION;
     }
 }
