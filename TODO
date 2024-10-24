@@ -2,3 +2,4 @@
 2. Implement MultiThreading
 3. Caching Static File Returns in Memmory
 4. On the Fly Asset Directory Reloads
+5. Support .ico files

@@ -26,7 +26,7 @@ void addBody(httpResponse *res, FileResp *fres)
 {
     res->body = fres->data;
     res->body_size = fres->len + 1;
-    addHeaderFormated(res, "Content-Length: %llu", fres->len * sizeof(char) + 1);
+    addHeaderFormated(res, "Content-Length: %llu", fres->len * sizeof(char));
     logInfo("Added Body");
 }
 
@@ -132,7 +132,7 @@ resBuffer flushHttpRes(httpResponse *res)
         logInfo("Adding Body");
         bufsize += strlen(buf) - 2;
         memcpy(buf + bufsize, res->body, res->body_size);
-        bufsize += res->body_size;
+        bufsize += res->body_size - 1;
         dealloacteHttpObj(res);
         logInfo("Flushed Request");
         resBuffer rb;
