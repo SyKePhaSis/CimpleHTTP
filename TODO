@@ -1,4 +1,5 @@
 [ ] Implement .env parsing and support
+[ ] Implement Robust Route Handling Source File Handling -> Maybe Lua for scripting?
 [ ] Adjust Route Table for handling multiple request types
 [ ] Implement Base Responses
 [ ] Return Unsuported METHOD
