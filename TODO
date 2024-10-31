@@ -1,5 +1,19 @@
-1. Implement Base Responses
-2. Implement MultiThreading
-3. Caching Static File Returns in Memmory
-4. On the Fly Asset Directory Reloads
-5. Support .ico files
+[ ] Implement .env parsing and support
+[ ] Implement Robust Route Handling Source File Handling -> Maybe Lua for scripting?
+[ ] Adjust Route Table for handling multiple request types
+[ ] Implement Base Responses
+[ ] Return Unsuported METHOD
+[ ] Caching Static File Returns in Memmory
+[ ] Implement Dynamic Paths
+[ ] Implement MultiThreading
+[ ] Implementing CORS functionality
+[ ] On the Fly Asset Directory Reloads
+[ ] Add security headers to responses
+[ ] Parse more thoroughly the requests comming in
+[ ] Implement Handlers for other methods
+[ ] Implement OPTIONS request support for routes
+[ ] Support Path, Query and Body Headers
+[ ] Implement ssl encryption
+[ ] Implement Whitelist and Blacklist
+[ ] MAKE NGINX IRRELEVANT
+[ ] Create Portfolio Website On This framework !!!!
