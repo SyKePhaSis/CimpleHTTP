@@ -1,10 +1,9 @@
 CC=gcc
 HDIRS=src/Headers 
 CFLAGS=-I $(HDIRS) -lws2_32 -Wall -Wextra -pedantic -fasynchronous-unwind-tables -fexceptions -fstack-clash-protection -Werror=format-security
-COREDEPS= httpParser.h RoutingTable.h requestHandler.h routes.h dataHandling.h assetRouting.h
-UTILDEPS= logger.h fileHandling.h httpCreator.h memmory.h dotenv.h
-DEPS=$(patsubst %.c,%.h,$(wildcard src/Core/*.c)) $(patsubst %.c,%.h,$(wildcard src/Utils/*.c)) $(patsubst %.c,%.h,$(wildcard src/*.c))
-
+DEPS=$(patsubst %.c,%.h,$(wildcard src/Core/*.c)) 
+DEPS+=$(patsubst %.c,%.h,$(wildcard src/Utils/*.c))
+DEPS+=$(patsubst %.c,%.h,$(wildcard src/*.c)) 
 OBJ=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS))))
 OBJDIR=build/objects
 OUTPUT=server
