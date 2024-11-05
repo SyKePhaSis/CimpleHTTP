@@ -13,6 +13,12 @@ FileResp getFile(const char *path)
     char _buf[MAX_PATH_SIZE];
     char *ext = getFileExt(path);
     char *location = getFilePath(ext);
+    if (location == NULL)
+    {
+        logError("File type not supported");
+        res.found = 0;
+        return res;
+    }
     strcpy(_buf, location);
     logInfo("%s", path);
     strcat(_buf, path);
@@ -107,4 +113,5 @@ char *getFilePath(char *ext)
     {
         return IMAGE_LOCATION;
     }
+    return NULL;
 }

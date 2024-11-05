@@ -220,6 +220,7 @@ rFunc getFunctionForAsset(enum ASSET_TYPE asset)
     {
         return getImageAsset;
     }
+    return NULL;
 }
 
 RouteTable *getRoutingTable()

@@ -11,12 +11,14 @@
 #include "Utils/logger.h"
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
+#include "Utils/dotenv.h"
 #include "server.h"
 #include "app.h"
 
 int main()
 {
-    setLogLevel(Connection);
+    setLogLevel(Info);
+    parseDotEnv();
     defineRoutes();
     printRoutes();
     logInfo("Routes Defined");
@@ -50,7 +52,7 @@ void initialize(SOCKET *lsock)
 
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_family = AF_INET;
-    server.sin_port = htons(DEFAULT_PORT);
+    server.sin_port = htons(atoi((const char *)getEnvValue("PORT")));
 
     if (bind(*lsock, (struct sockaddr *)&server, sizeof(server)) == SOCKET_ERROR)
     {
@@ -58,7 +60,7 @@ void initialize(SOCKET *lsock)
         gshutdown(*lsock);
     }
 
-    logSuccess("Socket Binded to Port: %d", DEFAULT_PORT);
+    logSuccess("Socket Binded to Port: %s", getEnvValue("PORT"));
 }
 
 void gshutdown(SOCKET lsock)
@@ -76,7 +78,7 @@ void slisten(SOCKET *lsock)
         gshutdown(*lsock);
     }
 
-    logSuccess("Waiting for connection: http://localhost:%d", DEFAULT_PORT);
+    logSuccess("Waiting for connection: http://localhost:%s", getEnvValue("PORT"));
 
     char buffer[BUFFER_SIZE];
     while (1)

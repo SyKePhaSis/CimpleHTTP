@@ -104,7 +104,13 @@ void defineAssetRoutes()
     {
         for (size_t i = 0; i < assets.size; i++)
         {
+            logInfo("Routing asset '%s'", assets.array[i]);
             char *location = getAssetLocation(assets.array[i]);
+            if (location == NULL)
+            {
+                logInfo("Asset '%s' skipped for routing", assets.array[i]);
+                continue;
+            }
             size = strlen(assets.array[i]) + strlen(location) + 1;
             char *path = allocate(size);
             StringCchCopyA(path, size, location);
@@ -139,6 +145,7 @@ char *getAssetLocation(char *filename)
     {
         return IMAGE_ASSET_ROUTE;
     }
+    return NULL;
 }
 
 enum ASSET_TYPE getAssetType(char *filename)

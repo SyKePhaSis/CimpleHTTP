@@ -1,4 +1,9 @@
-[ ] Implement .env parsing and support
+[x] Implement .env parsing and support
+[ ] Reorganize the main application files
+[ ] Create Memmory Matrix For Debugging
+[ ] Rewrite server component more safely with more error handling
+[ ] Create global free function that clears up all of the applications memmory 
+[ ] Handle Crashes and Create Memmory Dump
 [ ] Implement Robust Route Handling Source File Handling -> Maybe Lua for scripting?
 [ ] Adjust Route Table for handling multiple request types
 [ ] Implement Base Responses
@@ -15,5 +20,6 @@
 [ ] Support Path, Query and Body Headers
 [ ] Implement ssl encryption
 [ ] Implement Whitelist and Blacklist
+[ ] Handle Other Operating Systems - Unix
 [ ] MAKE NGINX IRRELEVANT
 [ ] Create Portfolio Website On This framework !!!!
