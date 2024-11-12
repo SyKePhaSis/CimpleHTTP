@@ -3,6 +3,7 @@
 #include "Utils/fileHandling.h"
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
+#include "Utils/dotenv.h"
 
 #include <stdio.h>
 #include <windows.h>
@@ -17,12 +18,12 @@ Assets getAssets()
         .folders = allocate(sizeof(char *) * 5),
         .size = 0};
     char *path = NULL;
-    getAssetsFromFolder(ASSET_FOLDER, &assetsFL);
+    getAssetsFromFolder(getEnvValue("ASSET_FOLDER"), &assetsFL);
     for (size_t i = 0; i < assetsFL.folder_count; i++)
     {
-        size_t allocation_size = strlen(ASSET_FOLDER) + strlen(assetsFL.folders[i]) + 2;
+        size_t allocation_size = strlen(getEnvValue("ASSET_FOLDER")) + strlen(assetsFL.folders[i]) + 2;
         path = allocate(allocation_size);
-        StringCchCopy(path, allocation_size, ASSET_FOLDER);
+        StringCchCopy(path, allocation_size, getEnvValue("ASSET_FOLDER"));
         StringCchCat(path, allocation_size, "/");
         StringCchCat(path, allocation_size, assetsFL.folders[i]);
         getAssetsFromFolder(path, &assetsFL);

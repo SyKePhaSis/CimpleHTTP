@@ -6,6 +6,7 @@
 #include "Utils/fileHandling.h"
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
+#include "Utils/dotenv.h"
 
 FileResp getFile(const char *path)
 {
@@ -95,23 +96,23 @@ char *getFilePath(char *ext)
 {
     if (strcmp(ext, "html") == 0)
     {
-        return HTML_LOCATION;
+        return getEnvValue("VIEWS_LOCATION");
     }
     else if (strcmp(ext, "css") == 0)
     {
-        return CSS_LOCATION;
+        return getEnvValue("CSS_LOCATION");
     }
     else if (strcmp(ext, "js") == 0)
     {
-        return JS_LOCATION;
+        return getEnvValue("JS_LOCATION");
     }
     else if (strcmp(ext, "ttf") == 0 || strcmp(ext, "woff") == 0 || strcmp(ext, "woff2") == 0)
     {
-        return TTF_LOCATION;
+        return getEnvValue("TTF_LOCATION");
     }
     else if (strcmp(ext, "jpeg") == 0 || strcmp(ext, "jpg") == 0 || strcmp(ext, "png") == 0)
     {
-        return IMAGE_LOCATION;
+        return getEnvValue("IMAGE_LOCATION");
     }
     return NULL;
 }
