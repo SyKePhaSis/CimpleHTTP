@@ -13,15 +13,9 @@
 #include "Utils/httpCreator.h"
 #include "Utils/dotenv.h"
 #include "server.h"
-#include "app.h"
 
-int main()
+void startServer()
 {
-    setLogLevel(Info);
-    parseDotEnv();
-    defineRoutes();
-    printRoutes();
-    logInfo("Routes Defined");
     SOCKET lsock = INVALID_SOCKET;
     initialize(&lsock);
     slisten(&lsock);

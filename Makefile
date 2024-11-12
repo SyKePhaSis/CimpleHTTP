@@ -6,7 +6,7 @@ DEPS+=$(patsubst %.c,%.h,$(wildcard src/Utils/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/*.c)) 
 OBJ=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS))))
 OBJDIR=build/objects
-OUTPUT=server
+OUTPUT=app
 
 .PHONY: cleano clean debug 
 

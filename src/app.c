@@ -1,12 +1,16 @@
 #include "Core/routes.h"
-#include "Core/assetRouting.h"
+#include "Utils/logger.h"
+#include "Utils/dotenv.h"
+#include "server.h"
+#include "routes.h"
+#include <WinSock2.h>
 
-void defineRoutes()
+int main()
 {
-    // Define Routes
-    defineRoute(GET, "/", getIndex);
-    defineRoute(GET, "*", get404);
-
-    // Define Asset Routes
-    defineAssetRoutes();
+    setLogLevel(Connection);
+    parseDotEnv();
+    defineRoutes();
+    printRoutes();
+    startServer();
+    return 0;
 }
