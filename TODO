@@ -1,6 +1,6 @@
 [x] Implement .env parsing and support
-[ ] Reorganize the main application files
-[ ] Create Memmory Matrix For Debugging
+[x] Reorganize the main application files
+[x] Create Memmory Matrix For Debugging
 [ ] Rewrite server component more safely with more error handling
 [ ] Create global free function that clears up all of the applications memmory 
 [ ] Handle Crashes and Create Memmory Dump
