@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _ROUTING_TABLE
 #define _ROUTING_TABLE
 
@@ -9,7 +8,8 @@ enum METHODS
 {
     GET = 0,
     POST = 1,
-    PUT = 2
+    PUT = 2,
+    DEL = 3
 };
 
 typedef struct Route

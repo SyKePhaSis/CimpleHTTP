@@ -1,12 +1,16 @@
 [x] Implement .env parsing and support
 [x] Reorganize the main application files
 [x] Create Memmory Matrix For Debugging
+[ ] Create global free function that clears up all of the applications memmory
+    - Issue: Freeing Array without freeing sub parts
+    - Add: Priority Freeing
+[x] Cleanup Asset Routing and Routing Core Files
+[x] Implemented Cli To Create Components (Handlers)
 [ ] Rewrite server component more safely with more error handling
-[ ] Create global free function that clears up all of the applications memmory 
-[ ] Handle Crashes and Create Memmory Dump
-[ ] Implement Robust Route Handling Source File Handling -> Maybe Lua for scripting?
-[ ] Adjust Route Table for handling multiple request types
-[ ] Implement Base Responses
+[ ] Handle Crashes (Using Signals) and Create Memmory Dump
+[x] Implement Robust Route Handling Source File Handling
+[x] Adjust Route Table for handling multiple request types
+[x] Implement Base Responses
 [ ] Return Unsuported METHOD
 [ ] Caching Static File Returns in Memmory
 [ ] Implement Dynamic Paths
@@ -23,3 +27,4 @@
 [ ] Handle Other Operating Systems - Unix
 [ ] MAKE NGINX IRRELEVANT
 [ ] Create Portfolio Website On This framework !!!!
+[ ] Add React Support 

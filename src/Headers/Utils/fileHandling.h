@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _FILE_MANAGER
 #define _FILE_MANAGER
 

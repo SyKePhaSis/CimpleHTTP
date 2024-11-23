@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _DATA_HANDLER
 #define _DATA_HANDLER
 

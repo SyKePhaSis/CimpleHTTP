@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _HTTP_CREATOR
 #define _HTTP_CREATOR
 

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _LOGGER
 #define _LOGGER
 

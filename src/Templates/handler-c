@@ -1,0 +1,40 @@
+#include "Handlers/#name#.h"
+
+Router r;
+RouterConfig RouterCofig = {
+    .path = "", // ADD PATH
+    .get = DISABLED,
+    .post = DISABLED,
+    .put = DISABLED,
+    .delete = DISABLED,
+};
+
+void get#name#(SOCKET *s, request req)
+{
+}
+
+void post#name#(SOCKET *s, request req)
+{
+}
+
+void put#name#(SOCKET *s, request req)
+{
+}
+
+void delete#name#(SOCKET *s, request req)
+{
+}
+
+Router get#name#Routes()
+{
+    r.path = RouterCofig.path;
+    if (RouterCofig.get)
+        r.get = getIndex;
+    if (RouterCofig.post)
+        r.post = postIndex;
+    if (RouterCofig.put)
+        r.put = putIndex;
+    if (RouterCofig.delete)
+        r.delete = deleteIndex;
+    return r;
+}

@@ -12,28 +12,6 @@
 
 RouteTable rt = {.count = 0};
 
-void getIndex(SOCKET *csock, request req)
-{
-    FileResp fr = getFile("index.html");
-    if (fr.data != NULL || !fr.found)
-    {
-        httpResponse res = getHttpReq();
-        addVersion(&res, "HTTP/1.1");
-        addResCode(&res, "200");
-        addMethod(&res, "OK");
-        addHeader(&res, "Content-Type: text/html");
-        addBody(&res, &fr);
-        resBuffer buf = flushHttpRes(&res);
-        sendData(csock, buf.buffer, buf.size);
-        logConnection("%s %s 200 OK", req.version, req.path);
-    }
-    else
-    {
-        logError("FileResp returned with NULL data");
-        get404(csock, req);
-    }
-}
-
 void getCssAsset(SOCKET *csock, request req)
 {
     char *name = getFileName(req.path);
@@ -192,6 +170,18 @@ void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, re
     addToRouteTable(r, &rt);
 }
 
+void defineRouter(Router r)
+{
+    if (r.get)
+        defineRoute(GET, r.path, r.get);
+    if (r.post)
+        defineRoute(POST, r.path, r.post);
+    if (r.put)
+        defineRoute(PUT, r.path, r.put);
+    if (r.delete)
+        defineRoute(DEL, r.path, r.delete);
+}
+
 void defineAssetRoute(char *path, enum ASSET_TYPE asset)
 {
     Route *r = allocate(sizeof(Route));
@@ -234,6 +224,15 @@ void printRoutes()
 {
     for (size_t i = 0; i < rt.count; i++)
     {
-        logSuccess("Route %s", rt.routes[i]->path);
+        char *meth;
+        if (rt.routes[i]->method == GET)
+            meth = "GET";
+        if (rt.routes[i]->method == POST)
+            meth = "POST";
+        if (rt.routes[i]->method == PUT)
+            meth = "PUT";
+        if (rt.routes[i]->method == DEL)
+            meth = "DELETE";
+        logSuccess("Route [%s] %s", meth, rt.routes[i]->path);
     }
 }

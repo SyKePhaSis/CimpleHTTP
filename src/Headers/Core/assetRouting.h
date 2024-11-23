@@ -1,4 +1,3 @@
-#pragma once
 #ifndef _ASSET_ROUTING
 #define _ASSET_ROUTING
 
