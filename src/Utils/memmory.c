@@ -36,13 +36,14 @@ void deallocate(void *block)
 
 void *reallocate(void *block, size_t size)
 {
+    removeFromTable(block);
     void *space = realloc(block, size);
     if (space == NULL)
     {
         ThrowMemError(__FILE__, __func__, __LINE__);
         exit(-1);
     }
-    updateTable(space, size);
+    insertToTable(space, size);
     return space;
 }
 

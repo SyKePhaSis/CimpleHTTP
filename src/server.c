@@ -79,15 +79,25 @@ void slisten(SOCKET *lsock)
     while (1)
     {
         SOCKET csock = INVALID_SOCKET;
+        struct sockaddr_in SenderAddr;
+        int SenderAddrSize = sizeof(SenderAddr);
+
         csock = accept(*lsock, NULL, NULL);
 
         if (csock == INVALID_SOCKET)
         {
             logError("Accept failed: %d\n", WSAGetLastError());
             gshutdown(*lsock);
+            continue;
         }
         logInfo("Made the Connection");
-        int bytesReceived = recv(csock, buffer, BUFFER_SIZE - 1, 0);
+        int bytesReceived = recvfrom(csock, buffer, BUFFER_SIZE - 1, 0, (SOCKADDR *)&SenderAddr, &SenderAddrSize);
+        char ip[17];
+        if (inet_ntop(AF_INET, &SenderAddr.sin_addr, ip, 17) == NULL)
+        {
+            logError("Couldn't get Ip: %d\n", WSAGetLastError());
+        }
+        logInfo("Connection from Ip: %s", ip);
         logInfo("Received %d bytes", bytesReceived);
         if (bytesReceived > 0)
         {

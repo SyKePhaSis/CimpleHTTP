@@ -19,7 +19,7 @@ OUTPUT_CLI=CimpleHTTP.exe
 
 all: header $(OUTPUT) footer
 
-debug: CFLAGS += -DDEBUG -g
+debug: CFLAGS += -DDEBUG -g -ggdb
 debug: header $(OUTPUT)
 	@echo ========================================
 	@echo Successfully Completed Debug Compilation

@@ -48,20 +48,6 @@ void insertToTable(void *address, size_t size)
     return;
 }
 
-void updateTable(void *address, size_t size)
-{
-    for (size_t c = 0; c < memTable.count; c++)
-    {
-        if (memTable.addresses[c] == address)
-        {
-            memTable.addresses[c] = address;
-            memTable.sizes[c] = size;
-            return;
-        }
-    }
-    logWarning("Couldn't find Address In Memmory Table");
-}
-
 void removeFromTable(void *address)
 {
     for (size_t c = 0; c < memTable.count; c++)

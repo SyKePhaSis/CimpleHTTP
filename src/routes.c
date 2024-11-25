@@ -1,7 +1,6 @@
 #include "Core/routes.h"
 #include "Core/assetRouting.h"
-
-#include "Routes/index.h"
+#include "Handlers/index.h"
 
 void defineRoutes()
 {

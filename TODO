@@ -14,16 +14,21 @@
 [ ] Return Unsuported METHOD
 [ ] Caching Static File Returns in Memmory
 [ ] Implement Dynamic Paths
+    - Note: Layer Checking -> First Sub Path -> Second Sub Path -> Third Sub Path -> ....
+    - Note: Filter Non Parameter Routes -> Search within parameter routes
 [ ] Implement MultiThreading
 [ ] Implementing CORS functionality
 [ ] On the Fly Asset Directory Reloads
+    - Dropping and Recreating Routes -> Watching For New Files in Asset Folder
 [ ] Add security headers to responses
 [ ] Parse more thoroughly the requests comming in
-[ ] Implement Handlers for other methods
+    - Query Params -> Body Params
+[x] Implement Handlers for other methods
+[ ] Get Handler Routes Through CLI
 [ ] Implement OPTIONS request support for routes
 [ ] Support Path, Query and Body Headers
 [ ] Implement ssl encryption
-[ ] Implement Whitelist and Blacklist
+[x] Implement Whitelist and Blacklist
 [ ] Handle Other Operating Systems - Unix
 [ ] MAKE NGINX IRRELEVANT
 [ ] Create Portfolio Website On This framework !!!!

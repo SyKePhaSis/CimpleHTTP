@@ -11,7 +11,7 @@ typedef struct MemT
 } MemT;
 
 void insertToTable(void *address, size_t size);
-void updateTable(void *address, size_t size);
+void updateTable(void *address, void *new_address, size_t size);
 void removeFromTable(void *address);
 void printMemTable(void);
 

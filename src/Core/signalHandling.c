@@ -15,8 +15,29 @@ static void handleSIGILL()
     exit(-1);
 }
 
+static void handleSIGABRT()
+{
+    logError("abnormal termination triggered by abort call");
+    exit(-1);
+}
+
+static void handleSIGSEGV()
+{
+    logError("segment violation");
+    exit(-1);
+}
+
+static void handleSIGFPE()
+{
+    logError("loating point exception");
+    exit(-1);
+}
+
 void init_signals()
 {
     signal(SIGINT, handleSIGINT);
     signal(SIGILL, handleSIGILL);
+    signal(SIGABRT, handleSIGABRT);
+    signal(SIGSEGV, handleSIGSEGV);
+    signal(SIGFPE, handleSIGFPE);
 }
