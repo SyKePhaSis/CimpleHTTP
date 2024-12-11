@@ -10,8 +10,10 @@
 [x] Implement Base Responses
 [x] Implement Handlers for other methods
 [x] Implement Whitelist and Blacklist
+[ ] Implement File Watcher for new asset files && recreate routes 
 [ ] Return Unsuported METHOD
 [ ] Caching Static File Returns in Memory
+[ ] Add Linux/Other OS Support 
 [ ] Implement Dynamic Paths
     - Note: Layer Checking -> First Sub Path -> Second Sub Path -> Third Sub Path -> ....
     - Note: Filter Non Parameter Routes -> Search within parameter routes
