@@ -4,29 +4,28 @@
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
 #include "Utils/dotenv.h"
+#include "Utils/dynamicArray.h"
 
 #include <stdio.h>
 #include <windows.h>
 #include <strsafe.h>
 #include <winnt.h>
 
-Assets getAssets()
+Assets *getAssets()
 {
-    Assets assetsFL = {
-        .array = NULL,
-        .folder_count = 0,
-        .folders = allocate(sizeof(char *) * 5),
-        .size = 0};
+    Assets *assetsFL = allocate(sizeof(Assets));
+    assetsFL->assets = getArray(CHAR_ARR);
+    assetsFL->folders = getArray(CHAR_ARR);
     char *path = NULL;
-    getAssetsFromFolder(getEnvValue("ASSET_FOLDER"), &assetsFL);
-    for (size_t i = 0; i < assetsFL.folder_count; i++)
+    getAssetsFromFolder(getEnvValue("ASSET_FOLDER"), assetsFL);
+    for (long i = 0; i < assetsFL->folders->size; i++)
     {
-        size_t allocation_size = strlen(getEnvValue("ASSET_FOLDER")) + strlen(assetsFL.folders[i]) + 2;
+        size_t allocation_size = strlen(getEnvValue("ASSET_FOLDER")) + strlen(getFromArray(assetsFL->folders, i)) + 2;
         path = allocate(allocation_size);
         StringCchCopy(path, allocation_size, getEnvValue("ASSET_FOLDER"));
         StringCchCat(path, allocation_size, "/");
-        StringCchCat(path, allocation_size, assetsFL.folders[i]);
-        getAssetsFromFolder(path, &assetsFL);
+        StringCchCat(path, allocation_size, getFromArray(assetsFL->folders, i));
+        getAssetsFromFolder(path, assetsFL);
         deallocate(path);
     }
     return assetsFL;
@@ -58,33 +57,16 @@ void getAssetsFromFolder(const char *path, Assets *assets)
             logInfo("<DIR>   %s  ", ffd.cFileName);
             if (strcmp(ffd.cFileName, ".") != 0 && strcmp(ffd.cFileName, "..") != 0)
             {
-                assets->folders[assets->folder_count] = allocate(strlen(ffd.cFileName) + 1);
-                StringCchCopyA(assets->folders[assets->folder_count++], strlen(ffd.cFileName) + 1, ffd.cFileName);
+                addToArray(assets->folders, ffd.cFileName);
                 logSuccess("Folder added %s", ffd.cFileName);
             }
         }
         else
         {
-            assets->size++;
-            if (assets->size == 1)
-            {
-                assets->array = allocate(sizeof(char *) * (assets->size));
-            }
-            else
-            {
-                assets->array = reallocate(assets->array, sizeof(char *) * (assets->size));
-            }
-            assets->array[assets->size - 1] = allocate(sizeof(char) * (strlen(ffd.cFileName) + 1));
-            StringCchCopyA(assets->array[assets->size - 1], strlen(ffd.cFileName) + 1, ffd.cFileName);
+            addToArray(assets->assets, ffd.cFileName);
             logInfo("<FILE>  %s  ", ffd.cFileName);
         }
     } while (FindNextFile(hFind, &ffd) != 0);
-
-    if (assets->size == 1)
-    {
-        deallocate(assets->array);
-        assets->array = NULL;
-    }
 
     dwError = GetLastError();
     if (dwError != ERROR_NO_MORE_FILES)
@@ -97,33 +79,25 @@ void getAssetsFromFolder(const char *path, Assets *assets)
 
 void defineAssetRoutes()
 {
-    Assets assets = getAssets();
+    Assets *assets = getAssets();
     size_t size;
-
-    if (assets.array != NULL && assets.array[assets.size - 1] != NULL)
+    for (long i = 0; i < assets->assets->size; i++)
     {
-        for (size_t i = 0; i < assets.size; i++)
+        logInfo("Routing asset '%s'", getFromArray(assets->assets, i));
+        char *location = getAssetLocation(getFromArray(assets->assets, i));
+        if (location == NULL)
         {
-            logInfo("Routing asset '%s'", assets.array[i]);
-            char *location = getAssetLocation(assets.array[i]);
-            if (location == NULL)
-            {
-                logInfo("Asset '%s' skipped for routing", assets.array[i]);
-                continue;
-            }
-            size = strlen(assets.array[i]) + strlen(location) + 1;
-            char *path = allocate(size);
-            StringCchCopyA(path, size, location);
-            StringCchCatA(path, size, assets.array[i]);
-            enum ASSET_TYPE type = getAssetType(assets.array[i]);
-            defineAssetRoute(path, type);
+            logInfo("Asset '%s' skipped for routing", getFromArray(assets->assets, i));
+            continue;
         }
+        size = strlen(getFromArray(assets->assets, i)) + strlen(location) + 1;
+        char *path = allocate(size);
+        StringCchCopyA(path, size, location);
+        StringCchCatA(path, size, getFromArray(assets->assets, i));
+        enum ASSET_TYPE type = getAssetType(getFromArray(assets->assets, i));
+        defineAssetRoute(path, type);
     }
-    else
-    {
-        logError("Couldn't read assets array");
-    }
-    cleanUp(&assets);
+    cleanUp(assets);
 }
 
 char *getAssetLocation(char *filename)
@@ -173,20 +147,10 @@ enum ASSET_TYPE getAssetType(char *filename)
 
 void printFolderContents()
 {
-    Assets assets = getAssets();
-    logSuccess("Assets Size: %lu", assets.size);
-    if (assets.array != NULL && assets.array[assets.size - 1] != NULL)
-    {
-        for (size_t i = 0; i < assets.size; i++)
-        {
-            logInfo("File: %s", assets.array[i]);
-        }
-    }
-    else
-    {
-        logError("Couldn't read assets array");
-    }
-    cleanUp(&assets);
+    Assets *assets = getAssets();
+    logSuccess("Assets Size: %lu", assets->assets->size);
+    printArray(assets->assets);
+    cleanUp(assets);
     return;
 }
 
@@ -194,16 +158,8 @@ void cleanUp(Assets *assets)
 {
     if (assets != NULL)
     {
-        for (size_t i = 0; i < assets->size; i++)
-        {
-            deallocate(assets->array[i]);
-        }
-        deallocate(assets->array);
-        for (size_t i = 0; i < assets->folder_count; i++)
-        {
-            deallocate(assets->folders[i]);
-        }
-        deallocate(assets->folders);
+        freeArray(assets->folders);
+        freeArray(assets->assets);
     }
     else
     {

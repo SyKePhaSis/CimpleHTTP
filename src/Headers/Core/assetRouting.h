@@ -7,15 +7,15 @@
 #define FONT_ASSET_ROUTE "/assets/ttf/"
 #define IMAGE_ASSET_ROUTE "/assets/images/"
 
+#include "Utils/dynamicArray.h"
+
 typedef struct Assets
 {
-    size_t size;
-    char **array;
-    size_t folder_count;
-    char **folders;
+    Array *assets;
+    Array *folders;
 } Assets;
 
-Assets getAssets();
+Assets *getAssets();
 void defineAssetRoutes();
 void printFolderContents();
 void cleanUp(Assets *assets);

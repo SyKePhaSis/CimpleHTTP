@@ -21,19 +21,25 @@ void addToArray(Array *arr, void *item)
         {
             if ((char *)arr->items[i] == NULL)
             {
+                logInfo("Found null item in array to replace");
                 arr->items[i] = (char *)item;
                 return;
             }
         }
         if (arr->items == NULL)
         {
+            if (arr->size != 0)
+            {
+                logWarning("Dynamic Array was null with size greater than one");
+                arr->size = 0;
+            }
             arr->items = allocate(sizeof((char *)item));
         }
         else
         {
             arr->items = reallocate(arr->items, sizeof((char *)item) * (arr->size + 1));
         }
-        arr->items[arr->size] = allocate(sizeof((char *)item));
+        arr->items[arr->size] = allocate(strlen(item) + 1);
         strcpy(arr->items[arr->size++], item);
         logInfo("Item Added To Dynamic Array");
     }
@@ -49,6 +55,11 @@ void addToArray(Array *arr, void *item)
         }
         if (arr->items == NULL)
         {
+            if (arr->size != 0)
+            {
+                logWarning("Dynamic Array was null with size greater than one");
+                arr->size = 0;
+            }
             arr->items = allocate(sizeof((int *)item));
         }
         else
@@ -93,14 +104,27 @@ long findInArray(Array *arr, void *item)
 
 void freeArray(Array *arr)
 {
-    for (long i = 0; i < arr->size; i++)
+    if (arr)
     {
-        if (arr->items[i] != NULL)
+        for (long i = 0; i < arr->size; i++)
         {
-            deallocate(arr->items[i]);
+            if (arr->items[i] != NULL)
+            {
+                deallocate(arr->items[i]);
+            }
         }
+        deallocate(arr);
     }
-    deallocate(arr);
+}
+
+void *getFromArray(Array *arr, long index)
+{
+    if (index < arr->size)
+    {
+        return arr->items[index];
+    }
+    logWarning("Tried to access element outside of bounds of Dynamic Array");
+    return NULL;
 }
 
 void printArray(Array *arr)

@@ -18,6 +18,7 @@ typedef struct Array
 
 Array *getArray(enum ARRAY_TYPE ar);
 void addToArray(Array *arr, void *item);
+void *getFromArray(Array *arr, long index);
 void removeFromArray(Array *arr, long index);
 long findInArray(Array *arr, void *item);
 void freeArray(Array *arr);
