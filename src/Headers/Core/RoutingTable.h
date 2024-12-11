@@ -9,15 +9,18 @@ enum METHODS
     GET = 0,
     POST = 1,
     PUT = 2,
-    DEL = 3
+    DEL = 3,
+    UNKNOWN = -1
 };
+
+typedef void (*rfunc)(SOCKET *csock, request req);
 
 typedef struct Route
 {
     enum METHODS method;
     char *path;
     int allocated;
-    void (*func)(SOCKET *cscok, request req);
+    rfunc func;
 } Route;
 
 typedef struct RouteTable
@@ -27,6 +30,6 @@ typedef struct RouteTable
 } RouteTable;
 
 void addToRouteTable(Route *r, RouteTable *rt);
-Route *getRoute(char *path, RouteTable *r);
+rfunc getRouteFunc(request req, RouteTable *r);
 
 #endif

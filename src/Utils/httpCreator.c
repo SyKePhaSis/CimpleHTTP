@@ -30,6 +30,15 @@ void addBody(httpResponse *res, FileResp *fres)
     logInfo("Added Body");
 }
 
+void addBodyEmpty(httpResponse *res)
+{
+    res->body = allocate(sizeof(char));
+    res->body_size = 1;
+    strcpy(res->body, "");
+    addHeaderFormated(res, "Content-Length: %llu", 0);
+    logInfo("Added Empty Body");
+}
+
 void addMethod(httpResponse *res, const char *method)
 {
     addInfo(res, method);
@@ -150,12 +159,12 @@ int proper(httpResponse *res)
 
     if (res->body == NULL)
     {
-        logError("Http Request cannot be flushed, has no body!");
+        logWarning("Http Request cannot be flushed, has no body!");
         return 0;
     }
     if (res->headers.array == NULL)
     {
-        logError("Http Request cannot be flushed, has no headers!");
+        logWarning("Http Request cannot be flushed, has no headers!");
         return 0;
     }
     if (res->info.array == NULL)

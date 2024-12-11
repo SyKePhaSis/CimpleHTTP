@@ -160,7 +160,7 @@ void get404(SOCKET *csock, request req)
     }
 }
 
-void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, request req))
+void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *csock, request req))
 {
     Route *r = allocate(sizeof(Route));
     r->method = method;

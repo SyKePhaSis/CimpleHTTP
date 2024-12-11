@@ -33,7 +33,7 @@ sreq splitReq(char *req)
 
 void getInfo(request *req, char *line)
 {
-    char *fs[3];
+    char **fs = allocate(sizeof(char *) * 3);
     char *tok;
     int c = 0;
     tok = strtok(line, " ");

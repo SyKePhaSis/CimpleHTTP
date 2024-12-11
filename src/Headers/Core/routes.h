@@ -45,7 +45,7 @@ void getCssAsset(SOCKET *csock, request req);
 void getJsAsset(SOCKET *csock, request req);
 void getFontAsset(SOCKET *csock, request req);
 void getImageAsset(SOCKET *csock, request req);
-void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *cscok, request req));
+void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *csock, request req));
 void defineRouter(Router r);
 void defineAssetRoute(char *path, enum ASSET_TYPE asset);
 void printRoutes(void);

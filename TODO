@@ -10,8 +10,9 @@
 [x] Implement Base Responses
 [x] Implement Handlers for other methods
 [x] Implement Whitelist and Blacklist
+[x] Return Unsuported METHOD
+[x] Add Support for Empty Body
 [ ] Implement File Watcher for new asset files && recreate routes 
-[ ] Return Unsuported METHOD
 [ ] Caching Static File Returns in Memory
 [ ] Add Linux/Other OS Support 
 [ ] Implement Dynamic Paths

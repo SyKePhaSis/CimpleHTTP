@@ -1,5 +1,6 @@
 #include <string.h>
 #include "Core/RoutingTable.h"
+#include "Core/built_in_handlers.h"
 #include "Utils/logger.h"
 
 void addToRouteTable(Route *r, RouteTable *rt)
@@ -15,23 +16,56 @@ void addToRouteTable(Route *r, RouteTable *rt)
     rt->routes[rt->count - 1] = r;
 }
 
-Route *getRoute(char *path, RouteTable *r)
+enum METHODS getMethodFromString(char *method)
 {
-    for (size_t i = 0; i < r->count; i++)
+    if (strcmp(method, "GET") == 0)
     {
-        if (strcmp(r->routes[i]->path, path) == 0)
-        {
-            return r->routes[i];
-        }
+        return GET;
     }
+    else if (strcmp(method, "POST") == 0)
+    {
+        return POST;
+    }
+    else if (strcmp(method, "PUT") == 0)
+    {
+        return PUT;
+    }
+    else if (strcmp(method, "DELETE") == 0)
+    {
+        return DEL;
+    }
+    return UNKNOWN;
+}
 
-    // Find * route
-    for (size_t i = 0; i < r->count; i++)
+rfunc getRouteFunc(request req, RouteTable *r)
+{
+    enum METHODS method = getMethodFromString(req.method);
+    if (method != UNKNOWN)
     {
-        if (strcmp(r->routes[i]->path, "*") == 0)
+        for (size_t i = 0; i < r->count; i++)
         {
-            return r->routes[i];
+            if (strcmp(r->routes[i]->path, req.path) == 0 && r->routes[i]->method == method)
+            {
+                return r->routes[i]->func;
+            }
         }
     }
-    return NULL;
+    if (method == GET)
+    {
+        // Find * route
+        for (size_t i = 0; i < r->count; i++)
+        {
+            if (strcmp(r->routes[i]->path, "*") == 0)
+            {
+                logInfo("Couldn't find route returned *");
+                return r->routes[i]->func;
+            }
+        }
+        return NULL;
+    }
+    else
+    {
+        return built_in_unsuported_method;
+    }
+    return built_in_internal_server_error;
 }

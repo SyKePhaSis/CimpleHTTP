@@ -31,6 +31,7 @@ typedef struct resBuffer
 httpResponse
 getHttpReq(void);
 void addBody(httpResponse *res, FileResp *fres);
+void addBodyEmpty(httpResponse *res);
 void addVersion(httpResponse *res, const char *version);
 void addMethod(httpResponse *res, const char *method);
 void addResCode(httpResponse *res, const char *code);

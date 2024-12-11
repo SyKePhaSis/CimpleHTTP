@@ -7,13 +7,13 @@
 void routeRequest(SOCKET *csock, request req)
 {
     RouteTable *rt = getRoutingTable();
-    Route *r = getRoute(req.path, rt);
-    if (r == NULL)
+    rfunc func = getRouteFunc(req, rt);
+    if (func == NULL)
     {
         logError("Couldn't get route from RouteTable");
         return;
     }
-    r->func(csock, req);
+    func(csock, req);
     deallocateReq(&req);
     return;
 }
