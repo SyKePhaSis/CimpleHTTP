@@ -1,22 +1,25 @@
 [x] Implement .env parsing and support
 [x] Reorganize the main application files
 [x] Create Memmory Matrix For Debugging
-[ ] Rewrite asset finder using new Dynamic Array
-[ ] Create global free function that clears up all of the applications memmory
-    - Issue: Freeing Array without freeing sub parts
-    - Add: Priority Freeing
+[x] Rewrite asset finder using new Dynamic Array
 [x] Cleanup Asset Routing and Routing Core Files
 [x] Implemented Cli To Create Components (Handlers)
-[ ] Rewrite server component more safely with more error handling
-[ ] Handle Crashes (Using Signals) and Create Memmory Dump
+[x] Handle Crashes (Using Signals) 
 [x] Implement Robust Route Handling Source File Handling
 [x] Adjust Route Table for handling multiple request types
 [x] Implement Base Responses
+[x] Implement Handlers for other methods
+[x] Implement Whitelist and Blacklist
 [ ] Return Unsuported METHOD
-[ ] Caching Static File Returns in Memmory
+[ ] Caching Static File Returns in Memory
 [ ] Implement Dynamic Paths
     - Note: Layer Checking -> First Sub Path -> Second Sub Path -> Third Sub Path -> ....
     - Note: Filter Non Parameter Routes -> Search within parameter routes
+[ ] Create global free function that clears up all of the applications memmory
+    - Issue: Freeing Array without freeing sub parts
+    - Add: Priority Freeing
+[ ] Rewrite server component more safely with more error handling
+[ ] Create Memmory Dump
 [ ] Implement MultiThreading
 [ ] Implementing CORS functionality
 [ ] On the Fly Asset Directory Reloads
@@ -24,12 +27,10 @@
 [ ] Add security headers to responses
 [ ] Parse more thoroughly the requests comming in
     - Query Params -> Body Params
-[x] Implement Handlers for other methods
 [ ] Get Handler Routes Through CLI
 [ ] Implement OPTIONS request support for routes
 [ ] Support Path, Query and Body Headers
 [ ] Implement ssl encryption
-[x] Implement Whitelist and Blacklist
 [ ] Handle Other Operating Systems - Unix
 [ ] MAKE NGINX IRRELEVANT
 [ ] Create Portfolio Website On This framework !!!!
