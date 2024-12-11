@@ -1,7 +1,7 @@
 #include "Handlers/#name#.h"
 
-Router r;
-RouterConfig RouterCofig = {
+Router r#name#;
+RouterConfig RouterCofig#name# = {
     .path = "", // ADD PATH
     .get = DISABLED,
     .post = DISABLED,
@@ -27,14 +27,14 @@ void delete#name#(SOCKET *s, request req)
 
 Router get#name#Routes()
 {
-    r.path = RouterCofig.path;
-    if (RouterCofig.get)
-        r.get = getIndex;
-    if (RouterCofig.post)
-        r.post = postIndex;
-    if (RouterCofig.put)
-        r.put = putIndex;
-    if (RouterCofig.delete)
-        r.delete = deleteIndex;
-    return r;
+    r#name#.path = RouterCofig#name#.path;
+    if (RouterCofig#name#.get)
+        r#name#.get = get#name#;
+    if (RouterCofig#name#.post)
+        r#name#.post = post#name#;
+    if (RouterCofig#name#.put)
+        r#name#.put = put#name#;
+    if (RouterCofig#name#.delete)
+        r#name#.delete = delete#name#;
+    return r#name#;
 }

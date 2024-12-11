@@ -59,8 +59,7 @@ void getAssetsFromFolder(const char *path, Assets *assets)
             if (strcmp(ffd.cFileName, ".") != 0 && strcmp(ffd.cFileName, "..") != 0)
             {
                 assets->folders[assets->folder_count] = allocate(strlen(ffd.cFileName) + 1);
-                StringCchCopyA(assets->folders[assets->folder_count], strlen(ffd.cFileName) + 1, ffd.cFileName);
-                assets->folder_count++;
+                StringCchCopyA(assets->folders[assets->folder_count++], strlen(ffd.cFileName) + 1, ffd.cFileName);
                 logSuccess("Folder added %s", ffd.cFileName);
             }
         }

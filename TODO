@@ -1,6 +1,7 @@
 [x] Implement .env parsing and support
 [x] Reorganize the main application files
 [x] Create Memmory Matrix For Debugging
+[ ] Rewrite asset finder using new Dynamic Array
 [ ] Create global free function that clears up all of the applications memmory
     - Issue: Freeing Array without freeing sub parts
     - Add: Priority Freeing
