@@ -1,9 +1,9 @@
 #include "Core/filtering.h"
 #include "Utils/memmory.h"
-#include "Utils/dynamicArray.h"
 #include "Utils/dotenv.h"
 #include "Utils/fileHandling.h"
 #include "Utils/logger.h"
+#include "DataTypes/dynamicArray.h"
 
 #include <stdlib.h>
 #include <string.h>

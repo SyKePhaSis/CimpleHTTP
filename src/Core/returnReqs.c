@@ -49,3 +49,16 @@ void view_404(SOCKET *s, request req)
         logError("Couldn't find 404 file");
     }
 }
+
+void json_200(SOCKET *s, request req, char *json)
+{
+    httpResponse res = getHttpReq();
+    addVersion(&res, "HTTP/1.1");
+    addResCode(&res, "200");
+    addMethod(&res, "OK");
+    addHeader(&res, "Content-Type: text/json");
+    addBodyText(&res, json);
+    resBuffer buf = flushHttpRes(&res);
+    sendData(s, buf.buffer, buf.size);
+    logConnection("%s %s 200 OK", req.version, req.path);
+}

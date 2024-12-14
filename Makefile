@@ -3,6 +3,7 @@ HDIRS=src/Headers
 CFLAGS=-I $(HDIRS) -lws2_32 -Wall -Wextra -pedantic -fasynchronous-unwind-tables -fexceptions -fstack-clash-protection -Werror=format-security
 DEPS=$(patsubst %.c,%.h,$(wildcard src/Core/*.c)) 
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/Utils/*.c))
+DEPS+=$(patsubst %.c,%.h,$(wildcard src/DataTypes/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard Handlers/*.c))
 OBJ=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS))))
@@ -15,7 +16,7 @@ DEPS_CLI=$(patsubst %.c,%.h, $(wildcard cli/*.c))
 OBJ_CLI=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS_CLI))))
 OUTPUT_CLI=CimpleHTTP.exe
 
-.PHONY: cleano clean debug cli test
+.PHONY: cleano clean debug cli test clean-cli cleano-cli
 
 all: header $(OUTPUT) footer
 

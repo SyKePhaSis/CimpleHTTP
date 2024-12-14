@@ -39,6 +39,15 @@ void addBodyEmpty(httpResponse *res)
     logInfo("Added Empty Body");
 }
 
+void addBodyText(httpResponse *res, char *text)
+{
+    res->body = allocate(strlen(text) + 1);
+    strcpy(res->body, text);
+    res->body_size = strlen(text) + 1;
+    addHeaderFormated(res, "Content-Length: %llu", res->body_size * sizeof(char));
+    logInfo("Added Text Body");
+}
+
 void addMethod(httpResponse *res, const char *method)
 {
     addInfo(res, method);

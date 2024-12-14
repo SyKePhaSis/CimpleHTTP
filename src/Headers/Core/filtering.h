@@ -1,7 +1,7 @@
 #ifndef _FILTERING
 #define _FILTERING
 
-#include "Utils/dynamicArray.h"
+#include "DataTypes/dynamicArray.h"
 
 Array *getWhitelist(void);
 Array *getBlacklist(void);

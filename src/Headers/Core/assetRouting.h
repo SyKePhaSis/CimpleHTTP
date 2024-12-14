@@ -7,7 +7,7 @@
 #define FONT_ASSET_ROUTE "/assets/ttf/"
 #define IMAGE_ASSET_ROUTE "/assets/images/"
 
-#include "Utils/dynamicArray.h"
+#include "DataTypes/dynamicArray.h"
 
 typedef struct Assets
 {

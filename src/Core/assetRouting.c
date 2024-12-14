@@ -4,7 +4,7 @@
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
 #include "Utils/dotenv.h"
-#include "Utils/dynamicArray.h"
+#include "DataTypes/dynamicArray.h"
 
 #include <stdio.h>
 #include <windows.h>

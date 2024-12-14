@@ -1,10 +1,12 @@
 #include "Handlers/index.h"
+#include "Utils/memmory.h"
+#include "DataTypes/dictionary.h"
 
 Router r;
 RouterConfig RouterCofig = {
     .path = "/", // ADD PATH
     .get = ENABLED,
-    .post = DISABLED,
+    .post = ENABLED,
     .put = DISABLED,
     .delete = DISABLED,
 };
@@ -16,6 +18,15 @@ void getIndex(SOCKET *s, request req)
 
 void postIndex(SOCKET *s, request req)
 {
+    Dict *dict = createDict();
+    addToDict(dict, "Id", "1234");
+    addToDict(dict, "Username", "Leonidas");
+    addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU");
+    char *json = flushDictToJson(dict);
+    json_200(s, req, json);
+
+    // Cleanup
+    deallocate(json);
 }
 
 void putIndex(SOCKET *s, request req)

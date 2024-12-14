@@ -1,7 +1,7 @@
 #ifndef _DYN_ARRAY
 #define _DYN_ARRAY
 
-#define findInArrray
+/* ARRAY */
 
 enum ARRAY_TYPE
 {
@@ -23,5 +23,19 @@ void removeFromArray(Array *arr, long index);
 long findInArray(Array *arr, void *item);
 void freeArray(Array *arr);
 void printArray(Array *arr);
+
+/* ARRAY ITERATOR */
+
+typedef struct Iterator
+{
+    Array *arr;
+    long index;
+} Iterator;
+
+Iterator *createIterator(Array *arr);
+int iteratorHasNext(Iterator *it); // Should not modify iterator
+void *iteratorGetNext(Iterator *it);
+void *iteratorRemove(Iterator *it);
+void iteratorCleanup(Iterator *it);
 
 #endif

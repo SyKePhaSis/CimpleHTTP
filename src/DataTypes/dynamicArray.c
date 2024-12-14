@@ -1,6 +1,6 @@
-#include "Utils/dynamicArray.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
+#include "DataTypes/dynamicArray.h"
 
 #include <string.h>
 
@@ -126,6 +126,66 @@ void *getFromArray(Array *arr, long index)
     logWarning("Tried to access element outside of bounds of Dynamic Array");
     return NULL;
 }
+
+/* ITERATOR FUNCTIONS */
+
+Iterator *createIterator(Array *arr)
+{
+    if (arr)
+    {
+        Iterator *it = allocate(sizeof(Iterator));
+        it->arr = arr;
+        it->index = -1;
+        return it;
+    }
+    logError("Parameter was null");
+    return NULL;
+}
+
+int iteratorHasNext(Iterator *it)
+{
+    long n_index = it->index;
+    void *val = NULL;
+    while (++n_index < it->arr->size)
+    {
+        val = getFromArray(it->arr, n_index);
+        if (val)
+            return 1;
+    }
+    return 0;
+}
+
+void *iteratorGetNext(Iterator *it)
+{
+    if (iteratorHasNext(it))
+    {
+        long n_index = it->index + 1;
+        void *val = NULL;
+        while (n_index < it->arr->size)
+        {
+            val = getFromArray(it->arr, n_index);
+            if (val)
+            {
+                it->index = n_index;
+                return val;
+            }
+            n_index++;
+        }
+    }
+    return NULL;
+}
+
+void *iteratorRemove(Iterator *it)
+{
+    removeFromArray(it->arr, it->index);
+}
+
+void iteratorCleanup(Iterator *it)
+{
+    deallocate(it);
+}
+
+/* HELPER FUNCTIONS */
 
 void printArray(Array *arr)
 {
