@@ -197,13 +197,10 @@ void dealloacteHttpObj(httpResponse *res)
     {
         deallocate(res->headers.array[i]);
     }
-    deallocate(res->headers.array);
-    logInfo("deallocating Info Array");
     for (size_t i = 0; i < res->info.length; i++)
     {
         deallocate(res->info.array[i]);
     }
-    deallocate(res->info.array);
-    deallocate((char *)res->body);
+    mass_deallocation(3, res->headers.array, res->info.array, (char *)res->body);
     logInfo("dealloacted Object");
 }

@@ -95,9 +95,7 @@ void dealloacteSREQ(sreq split_req)
 
 void deallocateReq(request *req)
 {
-    deallocate(req->version);
-    deallocate(req->method);
-    deallocate(req->path);
+    mass_deallocation(3, req->version, req->method, req->path);
 }
 
 // Helpers

@@ -51,6 +51,5 @@ char *flushBufferAsString(Buffer *buffer)
 
 void freeBuffer(Buffer *buffer)
 {
-    deallocate(buffer->buf);
-    deallocate(buffer);
+    mass_deallocation(2, buffer, buffer->buf);
 }

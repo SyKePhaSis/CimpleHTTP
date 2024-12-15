@@ -3,6 +3,7 @@
 #include "Utils/errors.h"
 #include "Utils/memmoryTable.h"
 #include <stdlib.h>
+#include <stdarg.h>
 
 size_t allocations = 0;
 
@@ -17,6 +18,18 @@ void *allocate(size_t size)
     insertToTable(space, size);
     allocations++;
     return space;
+}
+
+void mass_deallocation(int c, ...)
+{
+    va_list vlist;
+    va_start(vlist, c);
+    for (int i = 0; i < c; i++)
+    {
+        void *block = va_arg(vlist, void *);
+        deallocate(block);
+    }
+    va_end(vlist);
 }
 
 void deallocate(void *block)

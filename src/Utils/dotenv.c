@@ -26,11 +26,9 @@ void freeEnv()
 {
     for (unsigned int i = 0; i < EnvFile.count; i++)
     {
-        deallocate(EnvFile.keys[EnvFile.count]);
-        deallocate(EnvFile.values[EnvFile.count]);
+        mass_deallocation(2, EnvFile.keys[EnvFile.count], EnvFile.values[EnvFile.count]);
     }
-    deallocate(EnvFile.keys);
-    deallocate(EnvFile.values);
+    mass_deallocation(2, EnvFile.keys, EnvFile.values);
 }
 
 /*  HELPER FUNCTIONS  */
