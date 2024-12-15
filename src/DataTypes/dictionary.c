@@ -1,5 +1,6 @@
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
+#include "DataTypes/buffer.h"
 #include "DataTypes/dictionary.h"
 #include "DataTypes/dynamicArray.h"
 
@@ -67,20 +68,17 @@ void *getValueFromDict(Dict *dict, char *key)
     return ret;
 }
 
-size_t getDictKeys(Dict *dict, char **keyArray, size_t size)
+void getDictKeys(Dict *dict, Array *keyArray)
 {
     Iterator *it = createIterator(dict->keys);
-    char *val;
-    size_t win = 0;
+    char *val = NULL;
     while (iteratorHasNext(it))
     {
         val = (char *)iteratorGetNext(it);
         if (val)
-            // strcpy(keyArray[win++], val);
-            keyArray[win++] = val;
+            addToArray(keyArray, val);
     }
     iteratorCleanup(it);
-    return win;
 }
 
 int isKeyInDict(Dict *dict, char *key)
@@ -108,30 +106,27 @@ void cleanupDictionary(Dict *dict)
 
 // Works only for string -> Migration needed for other types
 // Rewrite by getting pairs rather than keys and then values
+// @TODO
 char *flushDictToJson(Dict *dict)
 {
-    size_t i = 0;
-    char *keys[10];
-    char *buf = allocate(1000); // -> WILL BE CHANGED FOR DYNAMIC BUFFER
-    buf[0] = 0x00;
-    strcat(buf, "{\n");
+    Array *keys = getArray(CHAR_ARR);
+    getDictKeys(dict, keys);
 
-    size_t key_count = getDictKeys(dict, keys, 10);
-    logInfo("Key-count: %llu", key_count);
-    while (i < key_count)
+    Buffer *buf = createBuffer();
+    addToBuffer(buf, "{\n", 2);
+
+    logInfo("Key-count: %llu", keys->size);
+    Iterator *it = createIterator(keys);
+    while (iteratorHasNext(it))
     {
-        strcat(buf, "\t\"");
-        strcat(buf, keys[i]);
-        strcat(buf, "\" : \"");
-        strcat(buf, getValueFromDict(dict, keys[i]));
-        strcat(buf, "\"\n");
-        i++;
+        char *key = iteratorGetNext(it);
+        addToBuffer(buf, "\t\"", 2);
+        addToBuffer(buf, key, strlen(key));
+        addToBuffer(buf, "\" : \"", 5);
+        char *val = getValueFromDict(dict, key); // Dictionary Values are only string -> Migrate when
+        addToBuffer(buf, val, strlen(val));
+        addToBuffer(buf, "\"\n", 2);
     }
-    strcat(buf, "}");
-    logInfo("Resjson: %s", buf);
-    return buf;
-}
-
-void printDictionary(Dict *dict)
-{
+    addToBuffer(buf, "}", 1);
+    return flushBufferAsString(buf);
 }

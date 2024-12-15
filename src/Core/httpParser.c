@@ -51,9 +51,17 @@ void getInfo(request *req, char *line)
         c++;
         tok = strtok(NULL, " ");
     }
-    req->method = fs[0];
-    req->path = fs[1];
-    req->version = fs[2];
+    req->method = allocate(sizeof(char) * strlen(fs[0]) + 1);
+    req->path = allocate(sizeof(char) * strlen(fs[1]) + 1);
+    req->version = allocate(sizeof(char) * strlen(fs[2]) + 1);
+    strcpy(req->method, fs[0]);
+    strcpy(req->path, fs[1]);
+    strcpy(req->version, fs[2]);
+    for (int i = 0; i < 3; i++)
+    {
+        deallocate(fs[i]);
+    }
+    deallocate(fs);
 }
 
 // char* getPath(char* req){return NULL;}

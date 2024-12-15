@@ -16,9 +16,8 @@ Dict *createDict();
 void addToDict(Dict *dict, char *key, void *value);
 void removeFromDict(Dict *dict, char *key);
 void *getValueFromDict(Dict *dict, char *key);
-size_t getDictKeys(Dict *dict, char **keyArray, size_t size);
+void getDictKeys(Dict *dict, Array *keyArray);
 int isKeyInDict(Dict *dict, char *key);
 char *flushDictToJson(Dict *dict);
 void cleanupDictionary(Dict *dict);
-void printDictionary(Dict *dict);
 #endif

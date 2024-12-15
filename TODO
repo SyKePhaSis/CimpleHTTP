@@ -18,15 +18,16 @@
 [x] Create Json Response Model
 [x] Create dynamicArray Iterator 
     -> To avoid NULL spaces but still return value [x]
+[x] Find one allocation tha isn't deallocated during request
+[x] Implement BUFFER DataType that dynamically scales
+    -> Fix Json Flush [x]
+    -> Fix Get Keys [x]
 [ ] Implement get dictionary pair count
-[ ] Implement BUFFER DataType that dynamically scales
-    -> Fix Json Flush
-    -> Fix Get Keys
 [ ] Create Function That Takes **kwargs and *args and determines if one is NULL and logs it as an error
 [ ] Implement Basic Response Template that the other responses inherit from
 [ ] Expand Array to Hold Possible All DataTypes in the same array
     -> Not array created for specific type
-[ ] Expand Dict Structure 
+[ ] Expand Dict Structure
 [ ] Refactor to add const in data types do avoid changing them in functions where it is not needed
 [ ] Implement File Watcher for new asset files && recreate routes 
 [ ] Caching Static File Returns in Memory

@@ -23,6 +23,7 @@ void postIndex(SOCKET *s, request req)
     addToDict(dict, "Username", "Leonidas");
     addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU");
     char *json = flushDictToJson(dict);
+    logInfo("ResJson: %s", json);
     json_200(s, req, json);
 
     // Cleanup
