@@ -1,5 +1,6 @@
 #include "Handlers/index.h"
 #include "Utils/memmory.h"
+#include "Utils/logger.h"
 #include "DataTypes/dictionary.h"
 
 Router r;

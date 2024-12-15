@@ -123,7 +123,6 @@ resBuffer flushHttpRes(httpResponse *res)
         if (res->body != NULL)
         {
             logInfo("Alocating %lu bytes to memmory", res->body_size + 2000);
-            logInfo("Had %lu allocations not freed", getAllocations());
             buf = allocate(res->body_size + 2000);
         }
         else

@@ -38,6 +38,7 @@ void *flushBuffer(Buffer *buffer)
     void *ret_buf = allocate(buffer->size);
     memcpy(ret_buf, buffer->buf, buffer->size);
     freeBuffer(buffer);
+    return ret_buf;
 }
 
 char *flushBufferAsString(Buffer *buffer)

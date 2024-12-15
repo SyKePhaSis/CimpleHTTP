@@ -113,6 +113,7 @@ void freeArray(Array *arr)
                 deallocate(arr->items[i]);
             }
         }
+        deallocate(arr->items);
         deallocate(arr);
     }
 }

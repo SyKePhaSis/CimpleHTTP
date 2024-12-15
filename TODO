@@ -23,7 +23,8 @@
     -> Fix Json Flush [x]
     -> Fix Get Keys [x]
 [x] Create Function That Takes count, va_args and determines if one is NULL and logs it as an error
-[ ] Implement Mass Deallocation of Objects using va_args
+[x] Implement Mass Deallocation of Objects using va_args
+[ ] Look into huge allocations not deallocated when using other methods than post 
 [ ] Implement get dictionary pair count
 [ ] Implement Basic Response Template that the other responses inherit from
 [ ] Expand Array to Hold Possible All DataTypes in the same array

@@ -13,6 +13,7 @@
 #include "Utils/httpCreator.h"
 #include "Utils/dotenv.h"
 #include "Utils/memmoryTable.h"
+#include "Utils/memmory.h"
 #include "server.h"
 
 void startServer()
@@ -126,5 +127,6 @@ void handle(char *req, SOCKET *csock)
 {
     request reqi = extractRequestInfo(req);
     routeRequest(csock, reqi);
+    logInfo("Had %lu allocations not freed", getAllocations());
     return;
 }

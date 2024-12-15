@@ -105,9 +105,9 @@ void cleanupDictionary(Dict *dict)
     deallocate(dict);
 }
 
+// @TODO
 // Works only for string -> Migration needed for other types
 // Rewrite by getting pairs rather than keys and then values
-// @TODO
 char *flushDictToJson(Dict *dict)
 {
     Array *keys = getArray(CHAR_ARR);
@@ -129,5 +129,8 @@ char *flushDictToJson(Dict *dict)
         addToBuffer(buf, "\"\n", 2);
     }
     addToBuffer(buf, "}", 1);
+    freeArray(keys);
+    iteratorCleanup(it);
+    cleanupDictionary(dict);
     return flushBufferAsString(buf);
 }
