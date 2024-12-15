@@ -1,5 +1,6 @@
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
+#include "Utils/fvalidation.h"
 #include "DataTypes/buffer.h"
 #include "DataTypes/dictionary.h"
 #include "DataTypes/dynamicArray.h"
@@ -20,7 +21,7 @@ Dict *createDict()
 
 void addToDict(Dict *dict, char *key, void *value)
 {
-    if (key && value && dict)
+    if (null_validation(3, dict, key, value))
     {
         // if (isKeyInDict(dict, key))
         // {
