@@ -4,6 +4,7 @@
 #include "DataTypes/buffer.h"
 #include "DataTypes/dictionary.h"
 #include "DataTypes/dynamicArray.h"
+#include "DataTypes/genericArray.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -12,14 +13,14 @@ Dict *createDict()
 {
     Dict *dict = allocate(sizeof(Dict));
     Array *keys = getArray(CHAR_ARR);
-    Array *values = getArray(CHAR_ARR);
+    GenericArray *values = getGenericArray();
     dict->keys = keys;
     dict->values = values;
     dict->count = 0;
     return dict;
 }
 
-void addToDict(Dict *dict, char *key, void *value)
+void addToDict(Dict *dict, char *key, void *value, ITEM_TYPE it)
 {
     if (null_validation(3, dict, key, value))
     {
@@ -29,7 +30,7 @@ void addToDict(Dict *dict, char *key, void *value)
         //     // TODO: IMPLEMENT OVERWRITTING KEY-VALUE PAIR
         // }
         addToArray(dict->keys, key);
-        addToArray(dict->values, value);
+        addToGenericArray(dict->values, value, it);
         dict->count++;
         logInfo("Added Value to Dictionary");
         return;
@@ -45,7 +46,7 @@ void removeFromDict(Dict *dict, char *key)
         if (strcmp((char *)iteratorGetNext(it), key) == 0)
         {
             removeFromArray(dict->keys, it->index);
-            removeFromArray(dict->values, it->index);
+            removeFromGenericArray(dict->values, it->index);
             dict->count--;
             break;
         }
@@ -61,12 +62,30 @@ void *getValueFromDict(Dict *dict, char *key)
     {
         if (strcmp((char *)iteratorGetNext(it), key) == 0)
         {
-            ret = getFromArray(dict->values, it->index);
+            ret = getFromGenericArray(dict->values, it->index);
             break;
         }
     }
     iteratorCleanup(it);
     return ret;
+}
+
+Pair getPair(Dict *dict, char *key)
+{
+    Pair p;
+    p.key = key;
+    Iterator *it = createIterator(dict->keys);
+    while (iteratorHasNext(it))
+    {
+        if (strcmp((char *)iteratorGetNext(it), key) == 0)
+        {
+            p.val = getFromGenericArray(dict->values, it->index);
+            p.type = *(ITEM_TYPE *)getTypeFromGenericArray(dict->values, it->index);
+            break;
+        }
+    }
+    iteratorCleanup(it);
+    return p;
 }
 
 void getDictKeys(Dict *dict, Array *keyArray)
@@ -101,7 +120,7 @@ int isKeyInDict(Dict *dict, char *key)
 void cleanupDictionary(Dict *dict)
 {
     freeArray(dict->keys);
-    freeArray(dict->values);
+    freeGenericArray(dict->values);
     deallocate(dict);
 }
 
@@ -121,16 +140,34 @@ char *flushDictToJson(Dict *dict)
     while (iteratorHasNext(it))
     {
         char *key = iteratorGetNext(it);
-        addToBuffer(buf, "\t\"", 2);
-        addToBuffer(buf, key, strlen(key));
-        addToBuffer(buf, "\" : \"", 5);
-        char *val = getValueFromDict(dict, key); // Dictionary Values are only string -> Migrate when
-        addToBuffer(buf, val, strlen(val));
-        addToBuffer(buf, "\"\n", 2);
+        Pair p = getPair(dict, key);
+        if (p.val != NULL)
+        {
+            addToBuffer(buf, "\t\"", 2);
+            addToBuffer(buf, key, strlen(key));
+            addToBuffer(buf, "\" : ", 4);
+            logInfo("TYPE: %d", p.type);
+            switch (p.type)
+            {
+            case STR:
+                addToBuffer(buf, "\"", 1);
+                addToBuffer(buf, p.val, strlen(p.val));
+                logInfo("TEST: %s", p.val);
+                addToBuffer(buf, "\"", 1);
+                if (iteratorHasNext(it))
+                    addToBuffer(buf, ",", 1);
+                addToBuffer(buf, "\n", 1);
+                break;
+            case DICT:
+                char *obj = flushDictToJson((Dict *)(p.val));
+                addToBuffer(buf, obj, strlen(obj));
+                free(obj);
+                break;
+            }
+        }
     }
     addToBuffer(buf, "}", 1);
     freeArray(keys);
     iteratorCleanup(it);
-    cleanupDictionary(dict);
     return flushBufferAsString(buf);
 }

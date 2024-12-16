@@ -20,15 +20,20 @@ void getIndex(SOCKET *s, request req)
 void postIndex(SOCKET *s, request req)
 {
     Dict *dict = createDict();
-    addToDict(dict, "Id", "1234");
-    addToDict(dict, "Username", "Leonidas");
-    addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU");
+    addToDict(dict, "Id", "1234", STR);
+    addToDict(dict, "Username", "Leonidas", STR);
+    addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU", STR);
+    Dict *subdict = createDict();
+    addToDict(subdict, "Id_ins", "test", STR);
+    addToDict(dict, "Subdict", subdict, DICT);
     char *json = flushDictToJson(dict);
     logInfo("ResJson: %s", json);
     json_200(s, req, json);
 
     // Cleanup
     deallocate(json);
+    cleanupDictionary(dict);
+    cleanupDictionary(subdict);
 }
 
 void putIndex(SOCKET *s, request req)

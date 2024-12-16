@@ -24,12 +24,13 @@
     -> Fix Get Keys [x]
 [x] Create Function That Takes count, va_args and determines if one is NULL and logs it as an error
 [x] Implement Mass Deallocation of Objects using va_args
-[ ] Look into huge allocations not deallocated when using other methods than post 
+[x] Look into huge allocations not deallocated when using other methods than post 
+[x] Expand Array to Hold Possible All DataTypes in the same array
+    -> Not array created for specific type -> GenericArray [x]
+[x] Expand Dict Structure
+[ ] Find Overallocation in postRouter
 [ ] Implement get dictionary pair count
 [ ] Implement Basic Response Template that the other responses inherit from
-[ ] Expand Array to Hold Possible All DataTypes in the same array
-    -> Not array created for specific type
-[ ] Expand Dict Structure
 [ ] Refactor to add const in data types do avoid changing them in functions where it is not needed
 [ ] Implement File Watcher for new asset files && recreate routes 
 [ ] Caching Static File Returns in Memory

@@ -7,11 +7,10 @@
 #include "routes.h"
 #include <WinSock2.h>
 #include <signal.h>
-#include <assert.h>
 
 int main()
 {
-    setLogLevel(All);
+    setLogLevel(Connection);
     init_signals();
     parseDotEnv();
     initializeWhitelist();

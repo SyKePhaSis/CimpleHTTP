@@ -2,12 +2,7 @@
 #define _BUGGER
 
 #include <stdlib.h>
-
-typedef struct Buffer
-{
-    void *buf;
-    size_t size;
-} Buffer;
+#include "DataTypes/types.h"
 
 Buffer *createBuffer();
 void addToBuffer(Buffer *bufer, void *block, size_t size);
