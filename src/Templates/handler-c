@@ -9,19 +9,19 @@ RouterConfig RouterCofig#name# = {
     .delete = DISABLED,
 };
 
-void get#name#(SOCKET *s, request req)
+void get#name#(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 
-void post#name#(SOCKET *s, request req)
+void post#name#(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 
-void put#name#(SOCKET *s, request req)
+void put#name#(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 
-void delete#name#(SOCKET *s, request req)
+void delete#name#(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 

@@ -8,8 +8,8 @@ enum LOGGING_LEVEL
     No = 0,
     Error = 1,
     Success = 2,
-    Connection = 3,
-    Warning = 4,
+    Warning = 3,
+    Connection = 4,
     Info = 5,
     All = 6
 };

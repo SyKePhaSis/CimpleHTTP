@@ -6,6 +6,7 @@
 #include "Core/dataHandling.h"
 #include "Core/returnReqs.h"
 #include "Core/returnReqs.h"
+#include "Utils/macros.h"
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
 

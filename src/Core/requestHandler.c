@@ -2,6 +2,7 @@
 #include "Core/routes.h"
 #include "Core/httpParser.h"
 #include "Core/RoutingTable.h"
+#include "Utils/memmory.h"
 #include "Utils/logger.h"
 
 void routeRequest(SOCKET *csock, request req)
@@ -13,7 +14,12 @@ void routeRequest(SOCKET *csock, request req)
         logError("Couldn't get route from RouteTable");
         return;
     }
+    int alocp = getAllocations();
     func(csock, req);
     deallocateReq(&req);
+    if (getAllocations() - alocp > 0)
+    {
+        logWarning("Non freed allocations found, please optimize the code: %d allocations not freed", getAllocations() - alocp);
+    }
     return;
 }

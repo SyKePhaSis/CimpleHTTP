@@ -16,6 +16,11 @@ DEPS_CLI=$(patsubst %.c,%.h, $(wildcard cli/*.c))
 OBJ_CLI=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS_CLI))))
 OUTPUT_CLI=CimpleHTTP.exe
 
+TIMER_START  := $(shell date "+%s")
+TIMER_END     = $(shell date "+%s")
+TIMER_SECONDS = $(shell expr $(TIMER_END) - $(TIMER_START))
+TIMER_FORMAT  = $(shell date --utc --date="@$(TIMER_SECONDS)" "+%H:%M:%S")
+
 .PHONY: cleano clean debug cli test clean-cli cleano-cli
 
 all: header $(OUTPUT) footer
@@ -30,14 +35,15 @@ cli: HDIRS = $(HDIRS_CLI)
 cli: header $(OUTPUT_CLI) footer
 
 $(OBJDIR)/%.o: %.c
-	@echo [*] Creating $@ Object File
+	@echo -n [$(TIMER_FORMAT)] Creating $@ Object File
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo -e " [OK]"
 
 $(OUTPUT): $(OBJ)
-	@echo [*] Creating $@ Execution File
+	@echo -n [$(TIMER_FORMAT)] Creating $@ Execution File
 	@$(CC) -o $@ $^ $(CFLAGS)
-
+		@echo -e " [OK]"
 test:
 	@echo $(DEPS)
 	@echo $(OBJ)
@@ -45,8 +51,9 @@ test:
 	@echo $(OBJ_CLI)
 
 $(OUTPUT_CLI): $(OBJ_CLI)
-	@echo [*] Creating $@ Execution File
+	@echo -n [$(TIMER_FORMAT)] Creating $@ Execution File
 	@$(CC) -o $@ $^ $(CLI_CFLAGS)
+	@echo -e " [OK]"
 
 cleano: 
 	@rm -f $(OBJ)

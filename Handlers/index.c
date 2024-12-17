@@ -12,12 +12,12 @@ RouterConfig RouterCofig = {
     .delete = DISABLED,
 };
 
-void getIndex(SOCKET *s, request req)
+void getIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
     view_or_404(s, req, "index.html");
 }
 
-void postIndex(SOCKET *s, request req)
+void postIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
     Dict *dict = createDict();
     addToDict(dict, "Id", "1234", STR);
@@ -36,11 +36,11 @@ void postIndex(SOCKET *s, request req)
     cleanupDictionary(subdict);
 }
 
-void putIndex(SOCKET *s, request req)
+void putIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 
-void deleteIndex(SOCKET *s, request req)
+void deleteIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
 }
 
