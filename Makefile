@@ -5,9 +5,10 @@ DEPS=$(patsubst %.c,%.h,$(wildcard src/Core/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/Utils/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/DataTypes/*.c))
 DEPS+=$(patsubst %.c,%.h,$(wildcard src/*.c))
-DEPS+=$(patsubst %.c,%.h,$(wildcard Handlers/*.c))
+# DEPS+=$(patsubst %.c,%.h,$(wildcard Handlers/*.c))
 OBJ=$(addprefix $(OBJDIR)/, $(addsuffix .o,$(basename $(DEPS))))
 OBJDIR=build/objects
+OUTPUT_DLLS=$(addprefix $(OBJDIR)/, $(patsubst %.c,%.dll,$(wildcard Handlers/*.c)))
 OUTPUT=app
 
 HDIRS_CLI=cli/Headers/
@@ -21,12 +22,12 @@ TIMER_END     = $(shell date "+%s")
 TIMER_SECONDS = $(shell expr $(TIMER_END) - $(TIMER_START))
 TIMER_FORMAT  = $(shell date --utc --date="@$(TIMER_SECONDS)" "+%H:%M:%S")
 
-.PHONY: cleano clean debug cli test clean-cli cleano-cli
+.PHONY: handlers clean-handlers cleano clean debug cli test clean-cli cleano-cli
 
-all: header $(OUTPUT) footer
+all: header $(OUTPUT) $(OUTPUT_DLLS) $(OUTPUT_CLI) footer
 
 debug: CFLAGS += -DDEBUG -g -ggdb
-debug: header $(OUTPUT)
+debug: header $(OUTPUT) $(OUTPUT_DLLS)
 	@echo ========================================
 	@echo Successfully Completed Debug Compilation
 	@echo ========================================
@@ -43,7 +44,8 @@ $(OBJDIR)/%.o: %.c
 $(OUTPUT): $(OBJ)
 	@echo -n [$(TIMER_FORMAT)] Creating $@ Execution File
 	@$(CC) -o $@ $^ $(CFLAGS)
-		@echo -e " [OK]"
+	@echo -e " [OK]"
+
 test:
 	@echo $(DEPS)
 	@echo $(OBJ)
@@ -54,6 +56,17 @@ $(OUTPUT_CLI): $(OBJ_CLI)
 	@echo -n [$(TIMER_FORMAT)] Creating $@ Execution File
 	@$(CC) -o $@ $^ $(CLI_CFLAGS)
 	@echo -e " [OK]"
+
+$(OBJDIR)/Handlers/%.dll: ./Handlers/%.c $(OBJ)
+	@echo -n [$(TIMER_FORMAT)] Creating $@ DLL File
+	@$(CC) --shared -o $@ $^ $(CFLAGS)
+	@echo -e " [OK]"
+
+handlers: $(OUTPUT_DLLS)
+
+clean-handlers: 
+	@rm -f $(OUTPUT_DLLS)
+	@echo [*] Cleaned DLL Files
 
 cleano: 
 	@rm -f $(OBJ)
@@ -68,7 +81,7 @@ clean-cli:
 	@echo [*] Cleaned All Files
 
 clean: 
-	@rm -f $(OBJ) $(OUTPUT)
+	@rm -f $(OBJ) $(OUTPUT) $(OUTPUT_DLLS)
 	@echo [*] Cleaned All Files
 
 header: 

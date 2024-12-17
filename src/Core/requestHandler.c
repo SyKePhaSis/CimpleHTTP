@@ -16,7 +16,7 @@ void routeRequest(SOCKET *csock, request req)
     }
     int alocp = getAllocations();
     func(csock, req);
-    int aloca = getAllocations() - alocp;
+    int aloca = getAllocations();
     if (aloca - alocp > 0)
     {
         logWarning("Non freed allocations found, please optimize the code: %d allocations not freed", aloca - alocp);

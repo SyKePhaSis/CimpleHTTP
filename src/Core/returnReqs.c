@@ -2,6 +2,7 @@
 #include "Core/httpParser.h"
 #include "Core/routes.h"
 #include "Core/dataHandling.h"
+#include "Core/built_in_handlers.h"
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
 #include "Utils/logger.h"
@@ -10,7 +11,7 @@
 void view_or_404(SOCKET *s, request req, char *path)
 {
     FileResp fr = getFile(path);
-    if (fr.data != NULL || !fr.found)
+    if (fr.data != NULL && fr.found)
     {
         httpResponse res = getHttpReq();
         addVersion(&res, "HTTP/1.1");
@@ -32,7 +33,7 @@ void view_or_404(SOCKET *s, request req, char *path)
 void view_404(SOCKET *s, request req)
 {
     FileResp fr = getFile("404.html");
-    if (fr.data != NULL)
+    if (fr.found && fr.data != NULL)
     {
         httpResponse res = getHttpReq();
         addVersion(&res, "HTTP/1.1");
@@ -47,6 +48,7 @@ void view_404(SOCKET *s, request req)
     else
     {
         logError("Couldn't find 404 file");
+        built_in_internal_server_error(s, req);
     }
 }
 

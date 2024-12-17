@@ -10,9 +10,15 @@
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
 
-void getIndex(SOCKET *s, request req);
-void postIndex(SOCKET *s, request req);
-void putIndex(SOCKET *s, request req);
-void deleteIndex(SOCKET *s, request req);
+#if defined(_WIN32)
+#define CIAPI __declspec(dllexport)
+#else
+#define CIAPI
+#endif
 
-Router getIndexRoutes();
+CIAPI void getIndex(SOCKET *s, request req);
+CIAPI void postIndex(SOCKET *s, request req);
+CIAPI void putIndex(SOCKET *s, request req);
+CIAPI void deleteIndex(SOCKET *s, request req);
+
+CIAPI Router getIndexRoutes();

@@ -4,12 +4,11 @@
 #include "Utils/fperiodic.h"
 #include "DataTypes/dictionary.h"
 
-Router r;
 RouterConfig RouterCofig = {
     .path = "/", // ADD PATH
     .get = ENABLED,
     .post = ENABLED,
-    .put = DISABLED,
+    .put = ENABLED,
     .delete = DISABLED,
 };
 
@@ -22,7 +21,7 @@ void postIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
     Dict *dict = createDict();
     addToDict(dict, "Id", "1234", STR);
-    addToDict(dict, "Username", "Leonidas", STR);
+    addToDict(dict, "Username", "Konstantinos", STR);
     addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU", STR);
     Dict *subdict = createDict();
     addToDict(subdict, "Id_ins", "test", STR);
@@ -44,6 +43,7 @@ void deleteIndex(UNUSED(SOCKET *s), UNUSED(request req))
 
 Router getIndexRoutes()
 {
+    Router r;
     r.path = RouterCofig.path;
     if (RouterCofig.get)
         r.get = getIndex;

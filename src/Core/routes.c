@@ -2,6 +2,7 @@
 #include "Core/dataHandling.h"
 #include "Core/httpParser.h"
 #include "Core/RoutingTable.h"
+#include "Core/built_in_handlers.h"
 #include "Utils/httpCreator.h"
 #include "Utils/fileHandling.h"
 #include "Utils/logger.h"
@@ -142,7 +143,7 @@ void getImageAsset(SOCKET *csock, request req)
 void get404(SOCKET *csock, request req)
 {
     FileResp fr = getFile("404.html");
-    if (fr.data != NULL)
+    if (fr.found && fr.data != NULL)
     {
         httpResponse res = getHttpReq();
         addVersion(&res, "HTTP/1.1");
@@ -157,6 +158,7 @@ void get404(SOCKET *csock, request req)
     else
     {
         logError("FileResp returned with NULL data");
+        built_in_internal_server_error(csock, req);
     }
 }
 

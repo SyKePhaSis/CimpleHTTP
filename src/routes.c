@@ -1,6 +1,6 @@
 #include "Core/routes.h"
 #include "Core/assetRouting.h"
-#include "Handlers/index.h"
+#include "Core/dynamicLoader.h"
 
 void defineRoutes()
 {
@@ -8,7 +8,7 @@ void defineRoutes()
     defineRoute(GET, "*", get404);
 
     // Define Routers
-    defineRouter(getIndexRoutes());
+    defineRouter(getRouterFromDLL("./build/objects/Handlers/index.dll"));
 
     // Define Asset Routes
     defineAssetRoutes();

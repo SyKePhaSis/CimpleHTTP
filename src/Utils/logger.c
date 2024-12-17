@@ -1,30 +1,29 @@
-#include<stdio.h>
-#include<stdarg.h>
-#include"Utils/logger.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include "Utils/logger.h"
 
-enum LOGGING_LEVEL loglev = All;
+enum LOGGING_LEVEL loglev = Connection;
 
-void logInfo(const char* line, ...)
+void logInfo(const char *line, ...)
 {
-    if(Info <= loglev)
+    if (Info <= loglev)
     {
-        const char* msg = "[INFO] ";
+        const char *msg = "[INFO] ";
         va_list argp;
-        va_start(argp,line);
+        va_start(argp, line);
         __log(msg, line, argp);
         va_end(argp);
-    
     }
     return;
 }
 
-void logError(const char* line, ...)
-{   
-    if(Error <= loglev)
+void logError(const char *line, ...)
+{
+    if (Error <= loglev)
     {
-        const char* msg = "[ERROR] ";
+        const char *msg = "[ERROR] ";
         va_list argp;
-        va_start(argp,line);
+        va_start(argp, line);
         red();
         __log(msg, line, argp);
         reset();
@@ -33,13 +32,13 @@ void logError(const char* line, ...)
     return;
 }
 
-void logWarning(const char* line, ...)
+void logWarning(const char *line, ...)
 {
-    if(Warning <= loglev)
+    if (Warning <= loglev)
     {
-        const char* msg = "[WARNING] ";
+        const char *msg = "[WARNING] ";
         va_list argp;
-        va_start(argp,line);
+        va_start(argp, line);
         yellow();
         __log(msg, line, argp);
         reset();
@@ -48,13 +47,13 @@ void logWarning(const char* line, ...)
     return;
 }
 
-void logSuccess(const char* line, ...)
+void logSuccess(const char *line, ...)
 {
-    if(Success <= loglev)
+    if (Success <= loglev)
     {
-        const char* msg = "[SUCCESS] ";
+        const char *msg = "[SUCCESS] ";
         va_list argp;
-        va_start(argp,line);
+        va_start(argp, line);
         green();
         __log(msg, line, argp);
         reset();
@@ -63,21 +62,21 @@ void logSuccess(const char* line, ...)
     return;
 }
 
-void logConnection(const char* line, ...)
+void logConnection(const char *line, ...)
 {
-    if(Connection <= loglev)
+    if (Connection <= loglev)
     {
-        const char* msg = "[CONNECTION] ";
+        const char *msg = "[CONNECTION] ";
         va_list argp;
-        va_start(argp,line);
+        va_start(argp, line);
         __log(msg, line, argp);
         va_end(argp);
     }
 }
 
-void __log(const char* msg, const char* line, va_list vlist)
+void __log(const char *msg, const char *line, va_list vlist)
 {
-    printf("%s",msg);
+    printf("%s", msg);
     vfprintf(stdout, line, vlist);
     printf("\n");
 }
