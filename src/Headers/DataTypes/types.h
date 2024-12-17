@@ -57,6 +57,14 @@ typedef struct Dict
     long count;
 } Dict;
 
+typedef struct DictionaryIterator
+{
+    Dict *dict;
+    long index;
+} DictionaryIterator;
+
+/* PAIRS */
+
 typedef struct Pair
 {
     char *key;
@@ -64,10 +72,14 @@ typedef struct Pair
     ITEM_TYPE type;
 } Pair;
 
-typedef struct DictionaryIterator
+typedef struct TypePair
 {
-    Dict *dict;
-    long index;
-} DictionaryIterator;
+    void *item;
+    ITEM_TYPE it;
+} TypePair;
+
+/* FUNCTIONS */
+
+TypePair getTypePair(void *item, ITEM_TYPE it);
 
 #endif

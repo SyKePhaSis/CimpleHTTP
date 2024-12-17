@@ -4,5 +4,6 @@
 #include <stdarg.h>
 
 int null_validation(int n, ...);
+void pcleanup(int n, ...);
 
 #endif

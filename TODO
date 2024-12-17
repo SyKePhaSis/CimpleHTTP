@@ -28,10 +28,11 @@
 [x] Expand Array to Hold Possible All DataTypes in the same array
     -> Not array created for specific type -> GenericArray [x]
 [x] Expand Dict Structure
-[ ] Add Dynamic Array support to dict
 [x] Solved unused imports in handlers using __attribute__ ((unused))
-[ ] Find Overallocation in postIndexRouter
 [x] Implement get dictionary pair count #ALREADY IMPLEMENTED -> pair count == key count
+[x] Implemented mass cleanup function 
+[ ] Add Dynamic Array support to dict
+[ ] Find Overallocation in postIndexRouter
 [ ] Implement Basic Response Template that the other responses inherit from
 [ ] Refactor to add const in data types do avoid changing them in functions where it is not needed
 [ ] Implement File Watcher for new asset files && recreate routes 

@@ -1,6 +1,7 @@
 #include "Handlers/index.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
+#include "Utils/fperiodic.h"
 #include "DataTypes/dictionary.h"
 
 Router r;
@@ -30,10 +31,7 @@ void postIndex(UNUSED(SOCKET *s), UNUSED(request req))
     logInfo("ResJson: %s", json);
     json_200(s, req, json);
 
-    // Cleanup
-    deallocate(json);
-    cleanupDictionary(dict);
-    cleanupDictionary(subdict);
+    pcleanup(3, TYPE_PAIR(json, STR), TYPE_PAIR(dict, DICT), TYPE_PAIR(subdict, DICT));
 }
 
 void putIndex(UNUSED(SOCKET *s), UNUSED(request req))
