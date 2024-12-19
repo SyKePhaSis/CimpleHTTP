@@ -21,6 +21,7 @@ void logSuccess(const char *line, ...);
 void logConnection(const char *line, ...);
 void __log(const char *msg, const char *line, va_list vlist);
 void setLogLevel(enum LOGGING_LEVEL level);
+enum LOGGING_LEVEL getLogLevel();
 
 // COLOURS
 void red();

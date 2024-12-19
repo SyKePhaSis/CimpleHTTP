@@ -3,6 +3,7 @@
 
 #include <WinSock2.h>
 #include "Core/httpParser.h"
+#include "DataTypes/types.h"
 
 enum METHODS
 {
@@ -23,13 +24,6 @@ typedef struct Route
     rfunc func;
 } Route;
 
-typedef struct RouteTable
-{
-    Route *routes[100];
-    size_t count;
-} RouteTable;
-
-void addToRouteTable(Route *r, RouteTable *rt);
-rfunc getRouteFunc(request req, RouteTable *r);
+rfunc getRouteFunc(request req, Array *r);
 
 #endif

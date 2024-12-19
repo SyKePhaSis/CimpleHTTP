@@ -1,3 +1,4 @@
+#include <windows.h>
 #include "Handlers/index.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
@@ -8,7 +9,7 @@ RouterConfig RouterCofig = {
     .path = "/", // ADD PATH
     .get = ENABLED,
     .post = ENABLED,
-    .put = ENABLED,
+    .put = DISABLED,
     .delete = DISABLED,
 };
 

@@ -17,5 +17,6 @@ FILE *openDotEnv();
 dotenv *getDotEnv();
 char *getEnvValue(char *key);
 char getFirstChar(char *str);
+void setDotEnv(dotenv dt);
 
 #endif

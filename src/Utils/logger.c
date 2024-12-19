@@ -86,6 +86,11 @@ void setLogLevel(enum LOGGING_LEVEL level)
     loglev = level;
 }
 
+enum LOGGING_LEVEL getLogLevel()
+{
+    return loglev;
+}
+
 // COLOUR FUNCTIONS
 
 void red()

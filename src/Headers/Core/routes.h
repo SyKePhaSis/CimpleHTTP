@@ -49,7 +49,8 @@ void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *csock, re
 void defineRouter(Router r);
 void defineAssetRoute(char *path, enum ASSET_TYPE asset);
 void printRoutes(void);
+void initRoutingTable();
 rFunc getFunctionForAsset(enum ASSET_TYPE asset);
-RouteTable *getRoutingTable();
+Array *getRoutingTable();
 
 #endif

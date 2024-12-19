@@ -7,11 +7,13 @@
 #include "Utils/fileHandling.h"
 #include "Utils/logger.h"
 #include "Utils/memmory.h"
+#include "DataTypes/dynamicArray.h"
+#include "DataTypes/types.h"
 
 #include <WinSock2.h>
 #include <stdlib.h>
 
-RouteTable rt = {.count = 0};
+Array rt;
 
 void getCssAsset(SOCKET *csock, request req)
 {
@@ -169,7 +171,7 @@ void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *csock, re
     r->path = path;
     r->allocated = 0;
     r->func = func;
-    addToRouteTable(r, &rt);
+    addToArray(&rt, r);
 }
 
 void defineRouter(Router r)
@@ -191,7 +193,7 @@ void defineAssetRoute(char *path, enum ASSET_TYPE asset)
     r->path = path;
     r->func = getFunctionForAsset(asset);
     r->allocated = 1;
-    addToRouteTable(r, &rt);
+    addToArray(&rt, r);
 }
 
 rFunc getFunctionForAsset(enum ASSET_TYPE asset)
@@ -215,26 +217,47 @@ rFunc getFunctionForAsset(enum ASSET_TYPE asset)
     return NULL;
 }
 
-RouteTable *getRoutingTable()
+Array *getRoutingTable()
 {
     return &rt;
+}
+
+void initRoutingTable()
+{
+    rt = initializeArray(ROUTER_ARR);
 }
 
 // Helper Functions
 
 void printRoutes()
 {
-    for (size_t i = 0; i < rt.count; i++)
+    Iterator *it = createIterator(&rt);
+    while (iteratorHasNext(it))
     {
-        char *meth;
-        if (rt.routes[i]->method == GET)
+        Route *r = iteratorGetNext(it);
+        char *meth = "";
+        switch (r->method)
+        {
+        case GET:
             meth = "GET";
-        if (rt.routes[i]->method == POST)
+            break;
+
+        case POST:
             meth = "POST";
-        if (rt.routes[i]->method == PUT)
+            break;
+
+        case PUT:
             meth = "PUT";
-        if (rt.routes[i]->method == DEL)
-            meth = "DELETE";
-        logSuccess("Route [%s] %s", meth, rt.routes[i]->path);
+            break;
+
+        case DEL:
+            meth = "DEL";
+            break;
+
+        case UNKNOWN:
+            meth = "UNKNOWN";
+            break;
+        }
+        logSuccess("Route [%s] %s", meth, r->path);
     }
 }

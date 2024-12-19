@@ -1,3 +1,4 @@
+#include "Core/RoutingTable.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
 #include "DataTypes/dynamicArray.h"
@@ -9,30 +10,49 @@
 
 size_t getSizeOfObject(void *item, ARRAY_TYPE at)
 {
+    size_t ret;
     switch (at)
     {
     case CHAR_ARR:
-        return strlen(item) + 1;
+        ret = strlen(item) + 1;
+        break;
 
     case INT_ARR:
-        return sizeof(int);
+        ret = sizeof(int);
+        break;
 
     case ITEM_TYPE_ARR:
-        return sizeof(ITEM_TYPE);
+        ret = sizeof(ITEM_TYPE);
+        break;
+
+    case ROUTER_ARR:
+        ret = sizeof(Route);
+        break;
     }
+    return ret;
 }
 
 int cmpObjects(void *item1, void *item2, ARRAY_TYPE at)
 {
+    int ret;
     switch (at)
     {
     case CHAR_ARR:
-        return strcmp((char *)item1, (char *)item2) == 0;
+        ret = strcmp((char *)item1, (char *)item2) == 0;
+        break;
     case INT_ARR:
-        return *(int *)item1 == *(int *)item2;
+        ret = *(int *)item1 == *(int *)item2;
+        break;
     case ITEM_TYPE_ARR:
-        return *(ITEM_TYPE *)item1 == *(ITEM_TYPE *)item2;
+        ret = *(ITEM_TYPE *)item1 == *(ITEM_TYPE *)item2;
+        break;
+    case ROUTER_ARR:
+        if (strcmp(((Route *)item1)->path, ((Route *)item2)->path) == 0 && ((Route *)item1)->method == ((Route *)item2)->method)
+            ret = 1;
+        ret = 0;
+        break;
     }
+    return ret;
 }
 
 /*         */
@@ -43,6 +63,15 @@ Array *getArray(ARRAY_TYPE at)
     arr->at = at;
     arr->items = NULL;
     arr->size = 0;
+    return arr;
+}
+
+Array initializeArray(ARRAY_TYPE at)
+{
+    Array arr;
+    arr.at = at;
+    arr.items = NULL;
+    arr.size = 0;
     return arr;
 }
 
@@ -166,7 +195,7 @@ void *iteratorGetNext(Iterator *it)
     return NULL;
 }
 
-void *iteratorRemove(Iterator *it)
+void iteratorRemove(Iterator *it)
 {
     removeFromArray(it->arr, it->index);
 }

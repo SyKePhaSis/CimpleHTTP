@@ -6,6 +6,7 @@
 /* ARRAY */
 
 Array *getArray(ARRAY_TYPE ar);
+Array initializeArray(ARRAY_TYPE at);
 void addToArray(Array *arr, void *item);
 void *getFromArray(Array *arr, long index);
 void removeFromArray(Array *arr, long index);
@@ -18,7 +19,7 @@ void printArray(Array *arr);
 Iterator *createIterator(Array *arr);
 int iteratorHasNext(Iterator *it); // Should not modify iterator
 void *iteratorGetNext(Iterator *it);
-void *iteratorRemove(Iterator *it);
+void iteratorRemove(Iterator *it);
 void iteratorCleanup(Iterator *it);
 
 #endif

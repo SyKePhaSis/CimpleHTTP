@@ -4,10 +4,11 @@
 #include "Core/RoutingTable.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
+#include "DataTypes/types.h"
 
 void routeRequest(SOCKET *csock, request req)
 {
-    RouteTable *rt = getRoutingTable();
+    Array *rt = getRoutingTable();
     rfunc func = getRouteFunc(req, rt);
     if (func == NULL)
     {

@@ -15,7 +15,8 @@ typedef enum
 {
     CHAR_ARR,
     INT_ARR,
-    ITEM_TYPE_ARR
+    ITEM_TYPE_ARR,
+    ROUTER_ARR
 } ARRAY_TYPE;
 
 typedef struct Array

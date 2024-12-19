@@ -207,3 +207,8 @@ char getFirstChar(char *str)
     } while (fc == 0x00);
     return fc;
 }
+
+void setDotEnv(dotenv dt)
+{
+    EnvFile = dt;
+}

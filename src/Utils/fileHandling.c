@@ -16,7 +16,7 @@ FileResp getFile(const char *path)
     char *location = getFilePath(ext);
     if (location == NULL)
     {
-        logError("File type not supported");
+        logError("File type not supported file: %s : extention %s", path, ext);
         res.found = 0;
         return res;
     }
