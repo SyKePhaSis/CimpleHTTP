@@ -7,6 +7,7 @@
 
 Dict *createDict();
 void addToDict(Dict *dict, char *key, void *value, ITEM_TYPE it);
+void addUnknownToDict(Dict *dict, char *key, void *value, size_t size);
 void removeFromDict(Dict *dict, char *key);
 void *getValueFromDict(Dict *dict, char *key);
 Pair getPair(Dict *dict, char *key);

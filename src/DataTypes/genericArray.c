@@ -19,9 +19,12 @@ size_t getSizeOfItemObject(void *item, ITEM_TYPE it)
         return sizeof(Dict);
     case ARRAY:
         return sizeof(Array);
+    case UKNOWN:
+        return 0;
     }
 }
 
+// @TODO
 void deallocateObject(void *item, ITEM_TYPE it)
 {
 }
@@ -43,7 +46,7 @@ void addToGenericArray(GenericArray *ga, void *item, ITEM_TYPE it)
         if (ga->items[i] == NULL)
         {
             logInfo("Found null item in array to replace");
-            ga->items[i] = item;
+            memcpy(ga->items[ga->size++], item, getSizeOfItemObject(item, it));
             addToArray(ga->at, &it);
             return;
         }
@@ -64,6 +67,37 @@ void addToGenericArray(GenericArray *ga, void *item, ITEM_TYPE it)
     ga->items[ga->size] = allocate(getSizeOfItemObject(item, it));
     addToArray(ga->at, &it);
     memcpy(ga->items[ga->size++], item, getSizeOfItemObject(item, it));
+    logInfo("Item Added To Dynamic Array");
+}
+
+void addUnknownToGenericArray(GenericArray *ga, void *item, size_t size)
+{
+    for (long i = 0; i < ga->size; i++)
+    {
+        if (ga->items[i] == NULL)
+        {
+            logInfo("Found null item in array to replace");
+            memcpy(ga->items[ga->size++], item, size);
+            addUnknownToArray(ga->at, item, size);
+            return;
+        }
+    }
+    if (ga->items == NULL)
+    {
+        if (ga->size != 0)
+        {
+            logWarning("Dynamic Array was null with size greater than one");
+            ga->size = 0;
+        }
+        ga->items = allocate(sizeof(item));
+    }
+    else
+    {
+        ga->items = reallocate(ga->items, sizeof(item) * (ga->size + 1));
+    }
+    ga->items[ga->size] = allocate(size);
+    addUnknownToArray(ga->at, item, size);
+    memcpy(ga->items[ga->size++], item, size);
     logInfo("Item Added To Dynamic Array");
 }
 

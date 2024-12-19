@@ -8,6 +8,7 @@
 Array *getArray(ARRAY_TYPE ar);
 Array initializeArray(ARRAY_TYPE at);
 void addToArray(Array *arr, void *item);
+void addUnknownToArray(Array *arr, void *item, size_t size);
 void *getFromArray(Array *arr, long index);
 void removeFromArray(Array *arr, long index);
 long findInArray(Array *arr, void *item);

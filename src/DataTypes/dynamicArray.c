@@ -28,6 +28,10 @@ size_t getSizeOfObject(void *item, ARRAY_TYPE at)
     case ROUTER_ARR:
         ret = sizeof(Route);
         break;
+
+    case UNKNOWN_ARR:
+        ret = 0;
+        break;
     }
     return ret;
 }
@@ -49,6 +53,9 @@ int cmpObjects(void *item1, void *item2, ARRAY_TYPE at)
     case ROUTER_ARR:
         if (strcmp(((Route *)item1)->path, ((Route *)item2)->path) == 0 && ((Route *)item1)->method == ((Route *)item2)->method)
             ret = 1;
+        ret = 0;
+        break;
+    case UNKNOWN_ARR:
         ret = 0;
         break;
     }
@@ -77,12 +84,47 @@ Array initializeArray(ARRAY_TYPE at)
 
 void addToArray(Array *arr, void *item)
 {
+    if (item == NULL)
+    {
+        logError("Item was null");
+        return;
+    }
+    // for (long i = 0; i < arr->size; i++)
+    // {
+    //     if (arr->items[i] == NULL)
+    //     {
+    //         logInfo("Found null item in array to replace");
+    //         memcpy(arr->items[i], item, getSizeOfObject(item, arr->at));
+    //         logInfo("Replaced item");
+    //         return;
+    //     }
+    // }
+    if (arr->items == NULL)
+    {
+        if (arr->size != 0)
+        {
+            logWarning("Dynamic Array was null with size greater than one");
+            arr->size = 0;
+        }
+        arr->items = allocate(sizeof(item));
+    }
+    else
+    {
+        arr->items = reallocate(arr->items, sizeof(item) * (arr->size + 1));
+    }
+    arr->items[arr->size] = allocate(getSizeOfObject(item, arr->at));
+    memcpy(arr->items[arr->size++], item, getSizeOfObject(item, arr->at));
+    logInfo("Item Added To Dynamic Array");
+}
+
+void addUnknownToArray(Array *arr, void *item, size_t size)
+{
     for (long i = 0; i < arr->size; i++)
     {
         if (arr->items[i] == NULL)
         {
             logInfo("Found null item in array to replace");
-            arr->items[i] = item;
+            memcpy(arr->items[i], item, size);
             return;
         }
     }
@@ -99,8 +141,8 @@ void addToArray(Array *arr, void *item)
     {
         arr->items = reallocate(arr->items, sizeof(item) * (arr->size + 1));
     }
-    arr->items[arr->size] = allocate(getSizeOfObject(item, arr->at));
-    memcpy(arr->items[arr->size++], item, getSizeOfObject(item, arr->at));
+    arr->items[arr->size] = allocate(size);
+    memcpy(arr->items[arr->size++], item, size);
     logInfo("Item Added To Dynamic Array");
 }
 

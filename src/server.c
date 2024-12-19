@@ -8,6 +8,8 @@
 #include "Core/routes.h"
 #include "Core/requestHandler.h"
 #include "Core/assetRouting.h"
+#include "Core/handlerManager.h"
+#include "Core/fileWatcher.h"
 #include "Utils/logger.h"
 #include "Utils/fileHandling.h"
 #include "Utils/httpCreator.h"
@@ -68,6 +70,8 @@ void gshutdown(SOCKET lsock)
 void slisten(SOCKET *lsock)
 {
 
+    WatcherObject *handlerWatcher = createHandlerWatcher();
+
     if (listen(*lsock, SOMAXCONN) == SOCKET_ERROR)
     {
         logError("Listen failed with error: %ld\n", WSAGetLastError());
@@ -79,6 +83,28 @@ void slisten(SOCKET *lsock)
     char buffer[BUFFER_SIZE];
     while (1)
     {
+        /*
+
+            CHECKING FOR HANDLER UPDATES
+
+        */
+
+        if (handlerWatcher)
+        {
+            retCheckWatcher rcw = checkForUpdate(handlerWatcher);
+            if (rcw.updated)
+            {
+                logSuccess("Update Identified - Reload");
+                reloadHandler(rcw.fileName);
+            }
+        }
+
+        /*
+
+            CONTINUING NETWORK LOOP
+
+        */
+
         SOCKET csock = INVALID_SOCKET;
         struct sockaddr_in SenderAddr;
         int SenderAddrSize = sizeof(SenderAddr);

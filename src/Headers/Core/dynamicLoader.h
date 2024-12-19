@@ -13,8 +13,13 @@ typedef struct retFromDLL
 {
     int found;
     Router r;
+    HMODULE hDLL;
+    char *file_path;
 } retFromDLL;
 
 retFromDLL getRouterFromDLL(char *lib_name);
+void initDllDict();
+retFromDLL reloadDLL(char *path);
+void closeDLL(char *path);
 
 #endif

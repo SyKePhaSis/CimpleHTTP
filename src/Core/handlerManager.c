@@ -1,14 +1,16 @@
-#include <windows.h>
-#include <strsafe.h>
-#include <winnt.h>
 
 #include "Core/handlerManager.h"
 #include "Core/dynamicLoader.h"
+#include "Core/fileWatcher.h"
 #include "Utils/dotenv.h"
 #include "Utils/memmory.h"
 #include "Utils/logger.h"
-#include "DataTypes/dynamicArray.h"
+#include "DataTypes/dictionary.h"
 #include "DataTypes/types.h"
+
+#include <windows.h>
+#include <strsafe.h>
+#include <winnt.h>
 
 /* REMOVE */
 
@@ -16,7 +18,7 @@
 
 /* VARIABLES */
 
-Array *handlersArray;
+Dict *handlersDict;
 
 /* HELPER FUNCTIONS */
 
@@ -54,7 +56,7 @@ void getHandlerPaths()
             StringCchCopy(tmp, s, fpath);
             StringCchCat(tmp, s, "/");
             StringCchCat(tmp, s, ffd.cFileName);
-            addToArray(handlersArray, tmp);
+            addToDict(handlersDict, ffd.cFileName, tmp, STR);
             logInfo("<FILE>  %s  ", ffd.cFileName);
         }
     } while (FindNextFile(hFind, &ffd) != 0);
@@ -72,13 +74,16 @@ void getHandlerPaths()
 
 void loadHandlers()
 {
-    handlersArray = getArray(CHAR_ARR);
+    handlersDict = createDict();
+    initDllDict();
     getHandlerPaths();
-    printArray(handlersArray);
-    Iterator *it = createIterator(handlersArray);
+    Array *keys = getArray(CHAR_ARR);
+    getDictKeys(handlersDict, keys);
+    Iterator *it = createIterator(keys);
     while (iteratorHasNext(it))
     {
-        char *hPath = (char *)iteratorGetNext(it);
+        char *hFname = (char *)iteratorGetNext(it);
+        char *hPath = (char *)getValueFromDict(handlersDict, hFname);
         logInfo("handler path: %s", hPath);
         retFromDLL ret = getRouterFromDLL(hPath);
         if (ret.found)
@@ -89,6 +94,31 @@ void loadHandlers()
     iteratorCleanup(it);
 }
 
-void reloadHandler(UNUSED(char *handler))
+WatcherObject *createHandlerWatcher()
 {
+    char *dpath = getEnvValue("HANDLERS_LOCATION");
+    if (!dpath)
+    {
+        logError("Couldn't get Handlers file path - stopped loading");
+        return NULL;
+    }
+    WatcherObject *wo = getDirectoryWatcher(dpath);
+    return wo;
+}
+
+void reloadHandler(char *dll_name)
+{
+    char *fullpath = getValueFromDict(handlersDict, dll_name);
+    deallocate(dll_name);
+    if (fullpath)
+    {
+        logSuccess("Found fullpath to updated dll: %s", fullpath);
+        retFromDLL ret = reloadDLL(fullpath);
+        logSuccess("Reloaded DLL");
+        removeRouteFamily(ret.r.path);
+        if (ret.found)
+        {
+            defineRouter(ret.r);
+        }
+    }
 }

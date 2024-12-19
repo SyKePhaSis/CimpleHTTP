@@ -16,7 +16,8 @@ typedef enum
     CHAR_ARR,
     INT_ARR,
     ITEM_TYPE_ARR,
-    ROUTER_ARR
+    ROUTER_ARR,
+    UNKNOWN_ARR
 } ARRAY_TYPE;
 
 typedef struct Array
@@ -48,7 +49,8 @@ typedef enum ITEM_TYPE
     STR,
     INTEGER,
     DICT,
-    ARRAY
+    ARRAY,
+    UKNOWN
 } ITEM_TYPE;
 
 typedef struct Dict

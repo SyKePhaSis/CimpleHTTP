@@ -196,6 +196,19 @@ void defineAssetRoute(char *path, enum ASSET_TYPE asset)
     addToArray(&rt, r);
 }
 
+void removeRouteFamily(char *path)
+{
+    Iterator *it = createIterator(&rt);
+    while (iteratorHasNext(it))
+    {
+        Route *r = iteratorGetNext(it);
+        if (strcmp(r->path, path) == 0)
+        {
+            iteratorRemove(it);
+        }
+    }
+}
+
 rFunc getFunctionForAsset(enum ASSET_TYPE asset)
 {
     if (asset == CSS)

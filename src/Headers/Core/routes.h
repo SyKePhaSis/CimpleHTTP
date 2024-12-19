@@ -48,6 +48,7 @@ void getImageAsset(SOCKET *csock, request req);
 void defineRoute(enum METHODS method, char *path, void (*func)(SOCKET *csock, request req));
 void defineRouter(Router r);
 void defineAssetRoute(char *path, enum ASSET_TYPE asset);
+void removeRouteFamily(char *path);
 void printRoutes(void);
 void initRoutingTable();
 rFunc getFunctionForAsset(enum ASSET_TYPE asset);

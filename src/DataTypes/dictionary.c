@@ -38,6 +38,24 @@ void addToDict(Dict *dict, char *key, void *value, ITEM_TYPE it)
     logError("Some Value Passed as Parameter is NULL");
 }
 
+void addUnknownToDict(Dict *dict, char *key, void *value, size_t size)
+{
+    if (null_validation(3, dict, key, value))
+    {
+        // if (isKeyInDict(dict, key))
+        // {
+        //     logWarning("Key tried added is already in dictionary");
+        //     // TODO: IMPLEMENT OVERWRITTING KEY-VALUE PAIR
+        // }
+        addToArray(dict->keys, key);
+        addUnknownToGenericArray(dict->values, value, size);
+        dict->count++;
+        logInfo("Added Value to Dictionary");
+        return;
+    }
+    logError("Some Value Passed as Parameter is NULL");
+}
+
 void removeFromDict(Dict *dict, char *key)
 {
     Iterator *it = createIterator(dict->keys);
