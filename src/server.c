@@ -45,6 +45,13 @@ void initialize(SOCKET *lsock)
         gshutdown(*lsock);
     }
 
+    unsigned long ul = 1;
+
+    int nRet = ioctlsocket(*lsock, FIONBIO, &ul);
+
+    if (nRet == SOCKET_ERROR)
+        logWarning("Couldn't set listening socket in non blocking mode");
+
     logSuccess("Socket Created");
     logInfo("Binding socket to port");
 
@@ -113,9 +120,11 @@ void slisten(SOCKET *lsock)
 
         if (csock == INVALID_SOCKET)
         {
+            if (WSAGetLastError() == WSAEWOULDBLOCK)
+                continue;
             logError("Accept failed: %d\n", WSAGetLastError());
             gshutdown(*lsock);
-            continue;
+            return;
         }
         logInfo("Made the Connection");
         int bytesReceived = recvfrom(csock, buffer, BUFFER_SIZE - 1, 0, (SOCKADDR *)&SenderAddr, &SenderAddrSize);

@@ -89,16 +89,17 @@ void addToArray(Array *arr, void *item)
         logError("Item was null");
         return;
     }
-    // for (long i = 0; i < arr->size; i++)
-    // {
-    //     if (arr->items[i] == NULL)
-    //     {
-    //         logInfo("Found null item in array to replace");
-    //         memcpy(arr->items[i], item, getSizeOfObject(item, arr->at));
-    //         logInfo("Replaced item");
-    //         return;
-    //     }
-    // }
+    for (long i = 0; i < arr->size; i++)
+    {
+        if (arr->items[i] == NULL)
+        {
+            logInfo("Found null item in array to replace");
+            arr->items[i] = allocate(getSizeOfObject(item, arr->at));
+            memcpy(arr->items[i], item, getSizeOfObject(item, arr->at));
+            logInfo("Replaced item");
+            return;
+        }
+    }
     if (arr->items == NULL)
     {
         if (arr->size != 0)
@@ -148,7 +149,7 @@ void addUnknownToArray(Array *arr, void *item, size_t size)
 
 void removeFromArray(Array *arr, long index)
 {
-    arr->items[index] = NULL;
+    deallocate(arr->items[index]);
 }
 
 long findInArray(Array *arr, void *item)

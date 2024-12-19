@@ -20,7 +20,7 @@ void getIndex(UNUSED(SOCKET *s), UNUSED(request req))
 void postIndex(UNUSED(SOCKET *s), UNUSED(request req))
 {
     Dict *dict = createDict();
-    addToDict(dict, "Id", "123456lol", STR);
+    addToDict(dict, "Id", "123456", STR);
     addToDict(dict, "Username", "Konstantinos", STR);
     addToDict(dict, "Password", "DOULEPSE GAMW THN PANAGIA SOU", STR);
     Dict *subdict = createDict();

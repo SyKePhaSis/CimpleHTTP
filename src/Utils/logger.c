@@ -83,6 +83,7 @@ void __log(const char *msg, const char *line, va_list vlist)
 
 void setLogLevel(enum LOGGING_LEVEL level)
 {
+    reset();
     loglev = level;
 }
 
@@ -113,6 +114,6 @@ void green()
 
 void reset()
 {
-    printf("\033[0m");
+    printf("\033[37m");
     return;
 }
